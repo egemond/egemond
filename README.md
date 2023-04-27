@@ -16,7 +16,7 @@ Egemond is a free and open-source app that helps you manage your personal financ
 - **Easy to use**: Egemond is designed to be intuitive for any user, regardless of their technical experience.
 
 ## Getting started
-To get started with Egemond read the documentation or follow the steps below.
+To get started with Egemond read the [documentation](https://github.com/egemond/egemond/wiki) or follow the steps below.
 
 ### Installation
 The easiest way to get started with Egemond is to download the latest release. Unzip the downloaded release into a new directory, such as `egemond`.
