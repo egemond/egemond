@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://storage.googleapis.com/egemond.io/logo.png" alt="Egemond" />
+  <img src="https://user-images.githubusercontent.com/60735691/234904816-2a466e4d-e4f1-4f68-80ec-99e882583100.png" alt="Egemond" />
 </p>
 
 <p align="center">
@@ -8,7 +8,7 @@
 
 <p align="center">A powerful and easy to use open-source personal finance management app.</p>
 
-![Egemond](https://storage.googleapis.com/egemond.io/egemond.png)
+![Egemond](https://user-images.githubusercontent.com/60735691/234904922-dfe0f637-f0f8-4658-a848-e0bd0a23d20e.png)
 
 Egemond is a free and open-source app that helps you manage your personal finances.
 - **Save your financial activity**: Quickly add your incomes and expenses and categorize and tag them.
