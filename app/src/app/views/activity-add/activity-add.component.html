@@ -1,0 +1,12 @@
+<div class="mb-3" *ngIf="!loading">
+  <div class="row justify-content-end">
+    <div class="col text-start">
+      <h3>{{ "Add activity" | localize}}</h3>
+      <a routerLink="/activities">
+        <i class="fas fa-arrow-left me-2"></i>
+        <span>{{ "Back to Overview" | localize}}</span>
+      </a>
+    </div>
+  </div>
+</div>
+<app-activity-form [activity]="activity" [errorEvent]="errorSubject.asObservable()" (loaded)="onLoaded()" (saveActivity)="createActivity($event)"></app-activity-form>

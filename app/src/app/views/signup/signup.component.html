@@ -1,0 +1,73 @@
+<div class="auth-container">
+  <div class="text-center py-2 mb-3">
+    <div class="row justify-content-center">
+      <div class="col-8">
+        <img src="/assets/logo.svg" class="logo-splash" />
+      </div>
+    </div>
+  </div>
+  
+  <ng-container *ngIf="step == 1">
+    <h4 class="text-center mb-3">{{ "Sign Up" | localize }}</h4>
+    <div class="card mb-3">
+      <div class="card-body">
+        <div *ngIf="error.message" class="alert alert-{{ error.type }}" role="alert">
+          {{ error.message | localize}}
+        </div>
+        <form (ngSubmit)="continueToCurrency()" role="form">
+          <div class="mb-3">
+            <label class="small text-secondary" for="email">
+              {{ "Email" | localize}}
+            </label>
+            <input [(ngModel)]="user.email" type="email" class="form-control form-input" [ngClass]="{ 'is-invalid': !user.email && submitted }" id="email" name="email" required />
+            <small *ngIf="!user.email && submitted" class="form-text text-danger">
+              {{ "This field is required." | localize}}
+            </small>
+          </div>
+          <div class="mb-3">
+            <label class="small text-secondary" for="password">
+              {{ "Password" | localize}}
+            </label>
+            <input [(ngModel)]="user.password" type="password" class="form-control form-input" [ngClass]="{ 'is-invalid': !user.password && submitted }" id="password" name="password" required />
+            <small *ngIf="!user.password && submitted" class="form-text text-danger">
+              {{ "This field is required." | localize}}
+            </small>
+          </div>
+          <div class="mb-3">
+            <label class="small text-secondary" for="masterPassword">
+              {{ "Master password" | localize}}
+            </label>
+            <input [(ngModel)]="user.masterPassword" type="password" class="form-control form-input" [ngClass]="{ 'is-invalid': !user.masterPassword && submitted }" id="masterPassword" name="masterPassword" required />
+            <small *ngIf="!user.masterPassword && submitted" class="form-text text-danger">
+              {{ "This field is required." | localize}}
+            </small>
+          </div>
+          <button type="submit" class="btn btn-primary d-block w-100 position-relative" [disabled]="signingUp">
+            <span [ngClass]="{ 'invisible': signingUp }">{{ "Sign Up" | localize}}</span>
+            <ng-container *ngIf="signingUp">
+              <span class="spinner-border spinner-border-sm btn-spinner" role="status" aria-hidden="true"></span>
+              <span class="visually-hidden">{{ "Loading" | localize }} …</span>
+            </ng-container>
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="card mt-3">
+      <div class="card-body">
+        <p class="text-center mb-0">{{ "Already have an account?" | localize }} <a routerLink="/">{{ "Sign In" | localize }}</a></p>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="step == 2">
+    <h4 class="text-center">{{ "Choose your currency" | localize }}</h4>
+    <p class="text-center mb-3">{{ "You will not be able to change it later." | localize }}</p>
+    <ul class="list-group list-group-flush rounded mt-0 mb-3">
+      <li *ngFor="let currency of currencies" class="list-group-item" [ngClass]="{ 'disabled': signingUp }" (click)="signUp(currency._id)">
+        <p class="mb-0">{{ currency._id }}</p>
+        <small class="text-secondary">{{ currency.symbol }}</small>
+      </li>
+    </ul>
+  </ng-container>
+
+</div>

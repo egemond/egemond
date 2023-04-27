@@ -1,0 +1,162 @@
+<ng-container *ngIf="!retrievalError && (!categories || !currency)">
+  <app-spinner></app-spinner>
+</ng-container>
+
+<div *ngIf="retrievalError" class="text-secondary text-center">
+  <p class="my-3">{{ retrievalError | localize}}</p>
+</div>
+
+<ng-container *ngIf="categories && currency">
+  <div *ngIf="error.message" class="alert alert-{{ error.type }}" role="alert">
+    {{ error.message | localize}}
+  </div>
+  <ul class="nav nav-pills mb-3">
+    <li class="nav-item">
+      <button class="nav-link me-1" [ngClass]="{ 'active': activity.type === 'expense' }" (click)="switch('expense')">{{ "Expense" | localize }}</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link ms-1" [ngClass]="{ 'active': activity.type === 'income' }" (click)="switch('income')">{{ "Income" | localize }}</button>
+    </li>
+  </ul>
+  <div class="card">
+    <div class="card-body">
+      <form (ngSubmit)="validate()" role="form">
+        <div class="mb-3">
+          <label class="small text-secondary" for="title">
+            {{ "Title" | localize}}
+          </label>
+          <input [(ngModel)]="activity.title" type="text" class="form-control form-input" [ngClass]="{ 'is-invalid': !activity.title && submitted }" id="title" name="title" />
+          <small *ngIf="!activity.title && submitted" class="form-text text-danger">
+            {{ "This field is required." | localize}}
+          </small>
+        </div>
+        <div class="mb-3">
+          <label class="small text-secondary" for="category">
+            {{ "Category" | localize}}
+          </label>
+          <select [(ngModel)]="activity.category" class="form-select form-input" [ngClass]="{ 'is-invalid': !activity.category && submitted }" id="category" name="category">
+            <option selected disabled></option>
+            <option *ngFor="let category of categories" value="{{ category._id }}">
+              {{ category.title | localize}}
+            </option>
+          </select>
+          <small *ngIf="!activity.category && submitted" class="form-text text-danger">
+            {{ "This field is required." | localize}}
+          </small>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="small text-secondary" for="amount">
+                {{ "Amount" | localize}}
+              </label>
+              <div class="input-group">
+                <input [(ngModel)]="activity.amount" type="number" step="0.01" class="form-control form-input" [ngClass]="{ 'is-invalid': !activity.amount && submitted }" id="amount" name="amount" />
+                <div class="input-group-text">{{ currency.symbol }}</div>
+              </div>
+              <small *ngIf="!activity.amount && submitted" class="form-text text-danger">
+                {{ "This field is required." | localize}}
+              </small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="small text-secondary">{{ "Date" | localize}}</label>
+              <div class="row">
+                <div class="col">
+                  <select [(ngModel)]="activity.day" class="form-select form-input" [ngClass]="{ 'is-invalid': !activity.day && submitted }" id="day" name="day">
+                    <option value="01">1</option>
+                    <option value="02">2</option>
+                    <option value="03">3</option>
+                    <option value="04">4</option>
+                    <option value="05">5</option>
+                    <option value="06">6</option>
+                    <option value="07">7</option>
+                    <option value="08">8</option>
+                    <option value="09">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">31</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <select [(ngModel)]="activity.month" class="form-select form-input"
+                    [ngClass]="{ 'is-invalid': !activity.month && submitted }" id="month" name="month">
+                    <option value="01">{{ "January" | localize}}</option>
+                    <option value="02">{{ "February" | localize}}</option>
+                    <option value="03">{{ "March" | localize}}</option>
+                    <option value="04">{{ "April" | localize}}</option>
+                    <option value="05">{{ "May" | localize}}</option>
+                    <option value="06">{{ "June" | localize}}</option>
+                    <option value="07">{{ "July" | localize}}</option>
+                    <option value="08">{{ "August" | localize}}</option>
+                    <option value="09">{{ "September" | localize}}</option>
+                    <option value="10">{{ "October" | localize}}</option>
+                    <option value="11">{{ "November" | localize}}</option>
+                    <option value="12">{{ "December" | localize}}</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <select [(ngModel)]="activity.year" class="form-select form-input" [ngClass]="{ 'is-invalid': !activity.year && submitted }" id="year" name="year">
+                    <option *ngFor="let year of years" value="{{ year }}">
+                      {{ year }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <small *ngIf="(!activity.day || !activity.month || !activity.year) && submitted" class="form-text text-danger">
+                {{ "This field is required." | localize}}
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="small text-secondary" for="tags">
+            {{ "Tags" | localize}}
+          </label>
+          <input [(ngModel)]="activity.tags" type="text" class="form-control form-input" id="tags" name="tags" />
+        </div>
+        <div class="mb-3">
+          <label class="small text-secondary" for="description">
+            {{ "Description" | localize}}
+          </label>
+          <textarea [(ngModel)]="activity.description" class="form-control form-input" id="description" name="description"></textarea>
+        </div>
+        <div class="mb-3">
+          <div class="form-check">
+            <input [(ngModel)]="activity.isExcluded" class="form-check-input" type="checkbox" value="" id="isExcluded" name="isExcluded">
+            <label class="form-check-label" for="isExcluded">{{ "Exclude amount when calculating aggregates" | localize }}</label>
+          </div>
+        </div>
+        <div class="text-end">
+          <button type="submit" class="btn btn-primary position-relative" [disabled]="saving">
+            <span [ngClass]="{ 'invisible': saving }">{{ "Save" | localize}}</span>
+            <ng-container *ngIf="saving">
+              <span class="spinner-border spinner-border-sm btn-spinner" role="status" aria-hidden="true"></span>
+              <span class="visually-hidden">{{ "Loading" | localize }} …</span>
+            </ng-container>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-container>
