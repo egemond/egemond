@@ -1,17 +1,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
 
-:root {
+:root, [data-bs-theme="light"] {
   --bs-font-sans-serif: "Inter", sans-serif;
   --bs-body-bg: #e9f1fb;
   --bs-body-color: #2e3036;
+  --bs-heading-color: #2e3036;
   --bs-primary: #246bc2;
   --bs-primary-rgb: 36,107,194;
+  --bs-secondary: #808080;
   --bs-secondary-rgb: 138,141,143;
   --bs-success-rgb: 46,133,54;
   --bs-danger-rgb: 201,29,52;
   --bs-dark-rgb: 46,48,54;
   --bs-link-color: #246bc2;
+  --bs-link-color-rgb: 36,107,194;
   --bs-link-hover-color: #205fac;
+  --bs-link-hover-color-rgb: 32,95,172;
+
+  --bs-foreground-bg: #fff;
+  --bs-subheader-bg: #d4e4f7;
+  --bs-list-group-item-header-bg: #d4e4f7;
+  --bs-list-group-item-header-color: #184781;
+  --bs-list-group-item-hover-bg: #f4f8fd;
+  --bs-form-border-color: #e6e6e6;
+  --bs-card-image-overlay-bg-rgba: 255,255,255,.75;
+}
+
+[data-bs-theme="dark"] {
+  --bs-body-color: #fff;
+  --bs-heading-color: #fff;
+
+  --bs-foreground-bg: #2d3339;
+  --bs-subheader-bg: #2e3238;
+  --bs-list-group-item-header-bg: #272b30;
+  --bs-list-group-item-header-color: #e9f1fb;
+  --bs-list-group-item-hover-bg: #394047;
+  --bs-form-border-color: var(--bs-secondary);
+  --bs-card-image-overlay-bg-rgba: 0,0,0,.25;
 }
 
 body {
@@ -85,8 +110,9 @@ a {
 
 /* List group */
 .list-group {
+  --bs-list-group-bg: var(--bs-foreground-bg);
   --bs-list-group-color: var(--bs-body-color);
-  --bs-list-group-border-color: #eaf2fb;
+  --bs-list-group-border-color: var(--bs-body-bg);
   --bs-list-group-active-bg: var(--bs-primary);
   --bs-list-group-active-border-color: var(--bs-primary);
   border-radius: var(--bs-border-radius);
@@ -100,14 +126,17 @@ a {
 .list-group-item:not(.list-group-item-header, .active):hover {
   cursor: pointer;
   color: var(--bs-list-group-color);
-  background-color: #f4f8fd;
+  background-color: var(--bs-list-group-item-hover-bg);
 }
 
 .list-group-item-header {
   z-index: 2;
-  border-color: #d4e4f7;
-  background-color: #d4e4f7;
-  color: #184781;
+  border-color: var(--bs-list-group-item-header-bg);
+  background-color: var(--bs-list-group-item-header-bg);
+}
+
+.list-group-item-header h6 {
+  color: var(--bs-list-group-item-header-color);
 }
 
 .list-group-item + .list-group-item-header {
@@ -119,6 +148,7 @@ a {
 /* Cards */
 .card {
   border: none;
+  --bs-card-bg: var(--bs-foreground-bg);
   --bs-card-border-color: transparent;
   --bs-card-inner-border-radius: var(--bs-border-radius);
 }
@@ -141,11 +171,11 @@ a {
 
 .card-image-overlay {
   width: 100%;
-  background: rgba(255,255,255,.75);
+  background-color: rgba(var(--bs-card-image-overlay-bg-rgba));
 }
 
 .card-footer {
-  background: #fff;
+  background: var(--bs-foreground-bg);
 }
 
 
@@ -159,7 +189,8 @@ a {
 
 .form-control, .form-select {
   color: var(--bs-body-color);
-  border-color: #e6e6e6;
+  background-color: var(--bs-foreground-bg) !important;
+  border-color: var(--bs-form-border-color);
   border-radius: 0;
   border-left: none;
   border-right: none;
@@ -185,7 +216,7 @@ a {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
 }
 
-.form-control:focus {
+.form-control:focus, .form-select:focus {
   border-color: #1879cd;
 }
 
@@ -195,7 +226,7 @@ a {
 
 .input-group-text {
   color: var(--bs-body-color);
-  border-color: #e6e6e6;
+  border-color: var(--bs-form-border-color);
   border-radius: 0;
   border-left: none;
   border-right: none;
@@ -217,7 +248,8 @@ a {
 }
 
 .form-check-input {
-  border-color: #e6e6e6;
+  --bs-form-check-bg: var(--bs-foreground-bg);
+  border-color: var(--bs-form-border-color);
 }
 
 .form-check-input:checked {
@@ -297,6 +329,7 @@ a {
 
 /* Modals */
 .modal {
+  --bs-modal-bg: var(--bs-foreground-bg);
   --bs-modal-border-radius: var(--bs-border-radius);
   --bs-modal-header-border-color: #e6e6e6;
   --bs-modal-footer-border-color: #e6e6e6;
@@ -419,7 +452,7 @@ a {
   left: 0;
   right: 0;
   margin-left: calc(50% - 50vw);
-  background-color: #d4e4f7;
+  background-color: var(--bs-subheader-bg);
   z-index: -1;
 }
 

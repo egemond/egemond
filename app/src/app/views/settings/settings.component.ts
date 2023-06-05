@@ -17,6 +17,8 @@ export class SettingsComponent implements OnInit {
 
   public user: User;
 
+  public theme: string;
+
   public languages: Language[];
 
   public submitted = false;
@@ -35,6 +37,14 @@ export class SettingsComponent implements OnInit {
   public changeTab() {
     this.error.type = "";
     this.error.message = "";
+  }
+
+  public changeTheme(theme) {
+    if (this.user.theme == theme) return;
+
+    this.user.theme = theme;
+
+    this.updateUser();
   }
 
   public changeLanguage(language) {
@@ -74,6 +84,9 @@ export class SettingsComponent implements OnInit {
         this.user = user;
         this.appService.setLanguage(user.language);
 
+        document.body.setAttribute("data-bs-theme", user.theme);
+        this.appService.setTheme(user.theme);
+
         this.error.type = "success";
         this.error.message = "Settings successfully saved.";
       })
@@ -106,6 +119,7 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.theme = this.appService.getTheme();
     this.languages = this.appService.getLanguages();
 
     let user = this.appService.getCurrentUser();

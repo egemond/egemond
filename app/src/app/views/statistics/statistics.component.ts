@@ -82,6 +82,11 @@ export class StatisticsComponent implements OnInit {
       }
     });
 
+    var titleColor = "#2e3036";
+    if (this.appService.getTheme() == "dark") {
+      titleColor = "#fff";
+    }
+
     this.chart.clear();
     this.chart.setOption({
       title: {
@@ -92,6 +97,7 @@ export class StatisticsComponent implements OnInit {
           fontFamily: "'Inter', sans-serif",
           fontSize: 28,
           fontWeight: 500,
+          color: titleColor,
         },
       },
       series: [

@@ -85,4 +85,17 @@ export class AppService {
   public setCurrency(value: string): void {
     this.storage.setItem("currency", value);
   }
+
+  public getTheme(): string {
+    let theme = this.storage.getItem("theme");
+    if (!theme) {
+      theme = "light";
+      this.setTheme(theme);
+    }
+    return theme;
+  }
+
+  public setTheme(value: string): void {
+    this.storage.setItem("theme", value);
+  }
 }

@@ -19,6 +19,12 @@ const userSchema = new mongoose.Schema({
     ref: "Currency",
     default: "EUR",
   },
+  theme: {
+    type: String,
+    required: true,
+    enum: ["light", "dark"],
+    default: "light",
+  },
   hashValue: String,
   randomValue: String,
   created: {

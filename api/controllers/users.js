@@ -66,6 +66,7 @@ const updateUser = (req, res) => {
                 } else {
                   result.email = req.body.email;
                   result.language = req.body.language;
+                  result.theme = req.body.theme;
                   result.updated = Date.now();
 
                   if (req.body.password) {

@@ -150,11 +150,18 @@ export class ActivitiesComponent implements OnInit {
         expenses = expenses.slice(Math.max(expenses.length - 6, 0));
         incomes = incomes.slice(Math.max(incomes.length - 6, 0));
 
+        let lineColor = "#a9c8ef";
+        let textColor = "#2e3036";
+        if (this.appService.getTheme() == "dark") {
+          lineColor = "#212529";
+          textColor = "#fff";
+        }
+
         this.chart.setOption({
           xAxis: {
             axisLine: {
               lineStyle: {
-                color: "#a9c8ef",
+                color: lineColor,
                 type: "dashed",
               },
             },
@@ -206,7 +213,7 @@ export class ActivitiesComponent implements OnInit {
             },
           ],
           textStyle: {
-            color: "#2e3036",
+            color: textColor,
             fontFamily: "'Inter', sans-serif",
           },
         });

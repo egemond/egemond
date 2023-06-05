@@ -43,5 +43,8 @@ export class LayoutComponent implements OnInit {
     this.appService.setLanguage(language);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    let theme = this.appService.getTheme();
+    document.body.setAttribute("data-bs-theme", theme);
+  }
 }
