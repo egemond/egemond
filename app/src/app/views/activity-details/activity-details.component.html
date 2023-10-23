@@ -76,7 +76,7 @@
           <p class="mb-0">{{ "Are you sure you want to delete this activity?" | localize }}</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ "Cancel" | localize }}</button>
+          <button type="button" class="btn btn-neutral" data-bs-dismiss="modal">{{ "Cancel" | localize }}</button>
           <button type="button" class="btn btn-danger position-relative" [disabled]="saving" (click)="deleteActivity()">
             <span [ngClass]="{ 'invisible': saving }">{{ "Delete" | localize }}</span>
             <ng-container *ngIf="saving">
