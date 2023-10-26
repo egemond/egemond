@@ -7,21 +7,22 @@ const getUser = (req, res) => {
   if (userId) {
     if (userId === req.auth._id) {
       User.findById(userId)
+        .select("-randomValue -hashValue -twoFactorAuthentication.secret -twoFactorAuthentication.recoveryCodes")
         .exec((error, result) => {
           if (!result) {
-            res.status(404).json({
+            return res.status(404).json({
               message: "The user with this identifier doesn't exist.",
             });
           } else if (error) {
-            res.status(500).json({
+            return res.status(500).json({
               message: "The data could not be retrieved.",
             });
           } else {
-            res.status(200).json(result);
+            return res.status(200).json(result);
           }
         });
     } else {
-      res.status(403).json({
+      return res.status(403).json({
         message: "You do not have permission to access this resource.",
       });
     }
@@ -42,13 +43,14 @@ const updateUser = (req, res) => {
     } else {
       if (userId === req.auth._id) {
         User.findById(userId)
-          .exec((error, result) => {
-            if (!result) {
-              res.status(404).json({
+          .select("-randomValue -hashValue -twoFactorAuthentication.secret -twoFactorAuthentication.recoveryCodes")
+          .exec((error, user) => {
+            if (!user) {
+              return res.status(404).json({
                 message: "The user with this identifier doesn't exist.",
               });
             } else if (error) {
-              res.status(500).json({
+              return res.status(500).json({
                 message: "The action could not be completed.",
               });
             } else {
@@ -56,30 +58,30 @@ const updateUser = (req, res) => {
                 email: req.body.email
               }).exec((error, result) => {
                 if (result && result._id != req.auth._id) {
-                  res.status(400).json({
+                  return res.status(400).json({
                     message: "The user with this email already exists.",
                   });
                 } else if (error) {
-                  res.status(500).json({
+                  return res.status(500).json({
                     message: "The data could not be retrieved.",
                   });
                 } else {
-                  result.email = req.body.email;
-                  result.language = req.body.language;
-                  result.theme = req.body.theme;
-                  result.updated = Date.now();
+                  user.email = req.body.email;
+                  user.language = req.body.language;
+                  user.theme = req.body.theme;
+                  user.updated = Date.now();
 
                   if (req.body.password) {
-                    result.password = result.setPassword(req.body.password);
+                    user.password = user.setPassword(req.body.password);
                   }
 
-                  result.save((error, result) => {
+                  user.save((error, result) => {
                     if (error) {
-                      res.status(500).json({
+                      return res.status(500).json({
                         message: "The action could not be completed.",
                       });
                     } else {
-                      res.status(200).json(result);
+                      return res.status(200).json(result);
                     }
                   });
                 }
@@ -87,7 +89,7 @@ const updateUser = (req, res) => {
             }
           });
       } else {
-        res.status(403).json({
+        return res.status(403).json({
           message: "You do not have permission to access this resource.",
         });
       }
@@ -106,11 +108,11 @@ const deleteUser = (req, res) => {
       User.findById(userId)
         .exec((error, result) => {
           if (!result) {
-            res.status(404).json({
+            return res.status(404).json({
               message: "The user with this identifier doesn't exist.",
             });
           } else if (error) {
-            res.status(500).json({
+            return res.status(500).json({
               message: "The action could not be completed.",
             });
           } else {
@@ -118,7 +120,7 @@ const deleteUser = (req, res) => {
               user: req.auth._id
             }).exec((error, result) => {
                 if (error) {
-                  res.status(500).json({
+                  return res.status(500).json({
                     message: "The data could not be retrieved.",
                   });
                 } else {
@@ -129,7 +131,7 @@ const deleteUser = (req, res) => {
                           message: "The action could not be completed.",
                         });
                       } else {
-                        res.status(204).json(null);
+                        return res.status(204).json(null);
                       }
                     });
                 }
@@ -137,7 +139,7 @@ const deleteUser = (req, res) => {
           }
         });
     } else {
-      res.status(403).json({
+      return res.status(403).json({
         message: "You do not have permission to access this resource.",
       });
     }

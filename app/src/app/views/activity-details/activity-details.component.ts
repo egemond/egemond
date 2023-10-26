@@ -24,7 +24,7 @@ import { Activity } from "../../models/activity";
   ],
 })
 export class ActivityDetailsComponent implements OnInit {
-  constructor(private router: Router, private path: ActivatedRoute, private activitiesService: ActivitiesService, private sanitizer: DomSanitizer) {}
+  constructor(private router: Router, private path: ActivatedRoute, private activitiesService: ActivitiesService, private appService: AppService, private sanitizer: DomSanitizer) {}
 
   public activity: Activity;
 
@@ -44,15 +44,20 @@ export class ActivityDetailsComponent implements OnInit {
 
     this.activitiesService
       .deleteActivity(this.activity._id)
-      .then((result) => {
-        (document.querySelector("#deleteModalButton") as HTMLElement).click();
-        this.router.navigateByUrl("/activities");
-      })
-      .catch((error) => {
-        this.error.type = "danger";
-        this.error.message = error;
-      })
-      .finally(() => {
+      .subscribe({
+        next: ((result) => {
+          this.router.navigateByUrl("/activities");
+        }),
+        error: ((error) => {
+          this.error.type = "danger";
+          this.error.message = this.appService.getErrorMessage(error);
+        }),
+      }).add(() => {
+        const modalCloseButton = document.querySelector("#deleteModalButton") as HTMLElement;
+        if (modalCloseButton) {
+          modalCloseButton.click();
+        }
+
         this.saving = false;
       });
   }
@@ -65,8 +70,8 @@ export class ActivityDetailsComponent implements OnInit {
           return this.activitiesService.getActivity(activityId);
         })
       )
-      .subscribe(
-        (activity: Activity) => {
+      .subscribe({
+        next: ((activity: Activity) => {
           this.activity = activity;
           
           if (activity.category && activity.category.image) {
@@ -74,10 +79,10 @@ export class ActivityDetailsComponent implements OnInit {
               `url(${activity.category.image})`
             );
           }
-        },
-        (error) => {
-          this.retrievalError = error;
-        }
-      );
+        }),
+        error: ((error) => {
+          this.retrievalError = this.appService.getErrorMessage(error);
+        }),
+      });
   }
 }

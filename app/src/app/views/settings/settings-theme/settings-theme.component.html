@@ -1,0 +1,11 @@
+<div class="mb-0">
+  <h4>{{ "Theme" | localize }}</h4>
+  <ul class="list-group list-group-flush rounded list-group-shadow mt-0">
+    <li class="list-group-item" [ngClass]="{ 'active': user.theme == 'light', 'disabled': saving }" (click)="changeTheme('light')">
+      {{ "Light" | localize }}
+    </li>
+    <li class="list-group-item" [ngClass]="{ 'active': user.theme == 'dark', 'disabled': saving }" (click)="changeTheme('dark')">
+      {{ "Dark" | localize }}
+    </li>
+  </ul>
+</div>

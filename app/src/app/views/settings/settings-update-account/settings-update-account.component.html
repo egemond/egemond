@@ -1,0 +1,22 @@
+<h4>{{ "Update account" | localize }}</h4>
+<div class="alert alert-{{ alert.variant }}" *ngIf="alert">
+  {{ alert.message | localize }}
+</div>
+<div class="card">
+  <div class="card-body">
+    <form (ngSubmit)="updateAccount()" role="form">
+      <div class="mb-3">
+        <label class="small text-secondary" for="email">
+          {{ "Email" | localize}}
+        </label>
+        <input [(ngModel)]="user.email" type="email" class="form-control form-input" [ngClass]="{ 'is-invalid': !user.email && submitted }" id="email" name="email" />
+        <small *ngIf="!user.email && submitted" class="form-text text-danger">
+          {{ "This field is required." | localize}}
+        </small>
+      </div>
+      <div class="text-end">
+        <button-spinner [type]="'submit'" [variant]="'primary'" [label]="'Save' | localize" [loading]="saving"></button-spinner>
+      </div>
+    </form>
+  </div>
+</div>

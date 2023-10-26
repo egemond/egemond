@@ -4,4 +4,7 @@ export class User {
   password?: string;
   language?: string;
   theme?: string;
+  twoFactorAuthentication?: {
+    enabled: boolean,
+  };
 }

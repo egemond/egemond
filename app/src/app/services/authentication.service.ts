@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable } from "rxjs";
 
 import { AppService } from "./app.service";
 
@@ -15,46 +16,87 @@ export class AuthenticationService {
 
   private apiUrl = `${environment.apiUrl}/api`;
 
-  public signIn(user: any): Promise<any> {
+  public signIn(user: any): Observable<any> {
     const url: string = `${this.apiUrl}/auth/signin`;
-    return this.http
-      .post(url, user)
-      .toPromise()
-      .then((result: AuthenticationResult) => {
-        this.appService.signIn(result.token, result.language, result.currency);
-        return result as AuthenticationResult;
-      })
-      .catch(this.errorHandler);
+
+    return this.http.post(url, user);
   }
 
-  public signUp(user: any): Promise<any> {
+  public signUp(user: any): Observable<any> {
     const url: string = `${this.apiUrl}/auth/signup`;
-    return this.http
-      .post(url, user)
-      .toPromise()
-      .then((result: AuthenticationResult) => {
-        this.appService.signIn(result.token, result.language, result.currency);
-        return result as AuthenticationResult;
-      })
-      .catch(this.errorHandler);
+
+    return this.http.post(url, user);
   }
 
-  public signUpAttempt(user: any): Promise<any> {
+  public signUpAttempt(user: any): Observable<any> {
     const url: string = `${this.apiUrl}/auth/signup/attempt`;
-    return this.http
-      .post(url, user)
-      .toPromise()
-      .then(() => {
-        return;
-      })
-      .catch(this.errorHandler);
+
+    return this.http.post(url, user);
   }
 
-  private errorHandler(error: any): Promise<any> {
-    if (error.name === "HttpErrorResponse") {
-      error.message = "The data could not be retrieved.";
-    }
+  public configure2FA(): Observable<any> {
+    const url: string = `${this.apiUrl}/auth/2fa/configure`;
+    const httpProperties = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${this.appService.getToken()}`
+      })
+    };
 
-    return Promise.reject(error.error.message || "The data could not be retrieved.");
+    return this.http.get(url, httpProperties);
+  }
+
+  public remove2FA(): Observable<any> {
+    const url: string = `${this.apiUrl}/auth/2fa/remove`;
+    const httpProperties = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${this.appService.getToken()}`
+      })
+    };
+
+    return this.http.delete(url, httpProperties);
+  }
+
+  public activate2FA(authenticationCode: string): Observable<any> {
+    const url: string = `${this.apiUrl}/auth/2fa/activate`;
+    const httpProperties = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${this.appService.getToken()}`
+      })
+    };
+
+    return this.http.post(url, {
+        token: authenticationCode,
+      }, httpProperties);
+  }
+
+  public verify2FA(user: any, authenticationCode: string): Observable<any> {
+    const url: string = `${this.apiUrl}/auth/2fa/verify`;
+    const httpProperties = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${this.appService.getToken()}`
+      })
+    };
+
+    return this.http.post(url, {
+        email: user.email,
+        password: user.password,
+        token: authenticationCode,
+      }, httpProperties);
+  }
+
+  public verifyRecoveryCode(user: any, recoveryCode: string): Observable<any> {
+    const url: string = `${this.apiUrl}/auth/2fa/recovery/verify`;
+    const httpProperties = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${this.appService.getToken()}`
+      })
+    };
+
+    return this.http
+      .post(url, {
+        email: user.email,
+        password: user.password,
+        recoveryCode: recoveryCode,
+      }, httpProperties);
   }
 }

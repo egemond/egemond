@@ -1,0 +1,7 @@
+<button class="btn btn-{{ variant }} position-relative {{ classes }}" [type]="type" [disabled]="loading" (click)="clickAction()">
+  <span [ngClass]="{ 'invisible': loading }">{{ label }}</span>
+  <ng-container *ngIf="loading">
+    <span class="spinner-border spinner-border-sm btn-spinner" role="status" aria-hidden="true"></span>
+    <span class="visually-hidden">{{ "Loading" | localize }} …</span>
+  </ng-container>
+</button>

@@ -5,11 +5,9 @@ import { switchMap } from "rxjs/operators";
 import { Subject } from "rxjs";
 
 import { ActivitiesService } from "../../services/activities.service";
-import { CategoriesService } from "../../services/categories.service";
+import { AppService } from "src/app/services/app.service";
 
 import { Activity } from "../../models/activity";
-
-import { LocalizePipe } from "../../pipes/localize.pipe";
 
 @Component({
   selector: "app-activity-edit",
@@ -17,7 +15,7 @@ import { LocalizePipe } from "../../pipes/localize.pipe";
   styleUrls: ["./activity-edit.component.css"],
 })
 export class ActivityEditComponent implements OnInit {
-  constructor(private router: Router, private path: ActivatedRoute, private activitiesService: ActivitiesService, private categoriesService: CategoriesService, private localizePipe: LocalizePipe) {}
+  constructor(private router: Router, private path: ActivatedRoute, private activitiesService: ActivitiesService, private appService: AppService) {}
 
   public retrievalError: string;
 
@@ -34,14 +32,16 @@ export class ActivityEditComponent implements OnInit {
   public updateActivity(activity: any): void {
     this.activitiesService
       .updateActivity(this.activity._id, activity)
-      .then((activity) => {
-        this.router.navigateByUrl("/activity/" + this.activity._id);
-      })
-      .catch((error) => {
-        this.errorSubject.next({
-          type: "danger",
-          message: error,
-        });
+      .subscribe({
+        next: ((activity) => {
+          this.router.navigateByUrl("/activity/" + this.activity._id);
+        }),
+        error: ((error) => {
+          this.errorSubject.next({
+            type: "danger",
+            message: this.appService.getErrorMessage(error),
+          });
+        }),
       });
   }
 
@@ -53,8 +53,8 @@ export class ActivityEditComponent implements OnInit {
           return this.activitiesService.getActivity(activityId);
         })
       )
-      .subscribe(
-        (activity: Activity) => {
+      .subscribe({
+        next: ((activity: Activity) => {
           this.activity = activity;
 
           this.activity.type = this.activity.amount < 0 ? "expense" : "income";
@@ -67,10 +67,10 @@ export class ActivityEditComponent implements OnInit {
           this.activity.day = ("0" + activity.date.getDate().toString()).slice(-2);
           this.activity.month = ("0" + (activity.date.getMonth() + 1).toString()).slice(-2);
           this.activity.year = activity.date.getFullYear().toString();
-        },
-        (error) => {
-          this.retrievalError = error;
-        }
-      );
+        }),
+        error: ((error) => {
+          this.retrievalError = this.appService.getErrorMessage(error);
+        }),
+      });
   }
 }

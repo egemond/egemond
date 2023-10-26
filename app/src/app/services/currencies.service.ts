@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-
-import { Currency } from "../models/currency";
+import { Observable } from "rxjs";
 
 import { environment } from "../../environments/environment";
 
@@ -13,29 +12,13 @@ export class CurrenciesService {
 
   private apiUrl = `${environment.apiUrl}/api`;
 
-  public getCurrencies(): Promise<Currency[]> {
+  public getCurrencies(): Observable<any> {
     const url: string = `${this.apiUrl}/currencies`;
-    return this.http
-      .get(url)
-      .toPromise()
-      .then(response => response as Currency[])
-      .catch(this.errorHandler);
+    return this.http.get(url);
   }
 
-  public getCurrency(currencyId): Promise<Currency> {
+  public getCurrency(currencyId): Observable<any> {
     const url: string = `${this.apiUrl}/currencies/${currencyId}`;
-    return this.http
-      .get(url)
-      .toPromise()
-      .then(response => response as Currency)
-      .catch(this.errorHandler);
-  }
-
-  private errorHandler(error: any): Promise<any> {
-    if (error.name === "HttpErrorResponse") {
-      error.message = "The data could not be retrieved.";
-    }
-
-    return Promise.reject(error.message || "The data could not be retrieved.");
+    return this.http.get(url);
   }
 }

@@ -27,6 +27,19 @@ const userSchema = new mongoose.Schema({
   },
   hashValue: String,
   randomValue: String,
+  twoFactorAuthentication: {
+    enabled: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+    secret: {
+      type: String,
+    },
+    recoveryCodes: [{
+      type: String,
+    }],
+  },
   created: {
     type: Date,
     default: Date.now,

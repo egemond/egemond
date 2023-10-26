@@ -6,11 +6,11 @@ const getCategories = (req, res) => {
     .sort("_id")
     .exec((error, categories) => {
       if (error) {
-        res.status(500).json({
+        return res.status(500).json({
           message: "The data could not be retrieved.",
         });
       } else {
-        res.status(200).json(categories);
+        return res.status(200).json(categories);
       }
     });
 };

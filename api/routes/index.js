@@ -28,6 +28,11 @@ router.delete("/activities/:activityId", authentication, activitiesController.de
 router.post("/auth/signin", authenticationController.signIn);
 router.post("/auth/signup", authenticationController.signUp);
 router.post("/auth/signup/attempt", authenticationController.signUpAttempt);
+router.get("/auth/2fa/configure", authentication, authenticationController.configure2FA);
+router.post("/auth/2fa/activate", authentication, authenticationController.activate2FA);
+router.delete("/auth/2fa/remove", authentication, authenticationController.remove2FA);
+router.post("/auth/2fa/verify", authenticationController.verify2FA);
+router.post("/auth/2fa/recovery/verify", authenticationController.verifyRecoveryCode);
 
 /* Categories */
 router.get("/categories", categoriesController.getCategories);
@@ -43,7 +48,7 @@ router.delete("/users/:userId", authentication, usersController.deleteUser);
 
 router.use((req, res, next) => {
   if (req.method != "OPTIONS" && !req.route) {
-    res.status(404).json({
+    return res.status(404).json({
       message: "This resource doesn't exist.",
     });
   }

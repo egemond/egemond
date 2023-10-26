@@ -39,6 +39,8 @@ MASTER_PASSWORD="{Master password}"
 - `JWT_SECRET`: A secret string used to sign JWT tokens that are used for authentication (required)
 - `ENABLE_SIGNUP`: Whether or not to allow signing up (required for creating a user account)
 - `MASTER_PASSWORD`: A password that must be entered when signing up (required if signing up is enabled)
+- `MASTER_PASSWORD`: A password that must be entered when signing up (required if signing up is enabled)
+- `TOTP_ALGORITHM`: Hashing algorithm for two-factor authentication (optional, default is SHA1)
 
 ### Run
 You can start Egemond by running

@@ -125,8 +125,8 @@ export class StatisticsComponent implements OnInit {
   }
 
   private getCategories(): void {
-    this.categoriesService.getCategories()
-      .then((categories: any) => {
+    this.categoriesService.getCategories().subscribe({
+      next: ((categories: any) => {
         categories.forEach(category => {
           category.expenses = {
             dates: [],
@@ -140,8 +140,8 @@ export class StatisticsComponent implements OnInit {
           };
         });
 
-        this.activitiesService.getActivities()
-          .then(activities => {
+        this.activitiesService.getActivities().subscribe({
+          next: ((activities) => {
             activities.forEach(activity => {
               let category = categories.findIndex(category => category._id === activity.category._id);
               let date = new Date(activity.date);
@@ -202,14 +202,16 @@ export class StatisticsComponent implements OnInit {
 
             this.categories = categories;
             this.updateView();
-          })
-          .catch((error) => {
-            this.retrievalError = error;
-          });
-      })
-      .catch((error) => {
+          }),
+          error: ((error) => {
+            this.retrievalError = this.appService.getErrorMessage(error);
+          }),
+        });
+      }),
+      error: ((error) => {
         this.retrievalError = error;
-      });
+      }),
+    });
   }
 
   private sortCategories(): void {

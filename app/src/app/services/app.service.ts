@@ -98,4 +98,12 @@ export class AppService {
   public setTheme(value: string): void {
     this.storage.setItem("theme", value);
   }
+
+  public getErrorMessage(error: any): string {
+    if (error.name === "HttpErrorResponse") {
+      error.message = "The data could not be retrieved.";
+    }
+
+    return error.error.message || "The data could not be retrieved.";
+  }
 }

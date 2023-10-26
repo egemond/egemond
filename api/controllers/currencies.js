@@ -6,11 +6,11 @@ const getCurrencies = (req, res) => {
     .sort("_id")
     .exec((error, currencies) => {
       if (error) {
-        res.status(500).json({
+        return res.status(500).json({
           message: "The data could not be retrieved.",
         });
       } else {
-        res.status(200).json(currencies);
+        return res.status(200).json(currencies);
       }
     });
 };
@@ -21,15 +21,15 @@ const getCurrency = (req, res) => {
     Currency.findById(currencyId)
       .exec((error, currency) => {
         if (!currency) {
-          res.status(404).json({
+          return res.status(404).json({
             message: "The currency with this identifier doesn't exist.",
           });
         } else if (error) {
-          res.status(500).json({
+          return res.status(500).json({
             message: "The data could not be retrieved.",
           });
         } else {
-          res.status(200).json(currency);
+          return res.status(200).json(currency);
         }
       });
   } else {

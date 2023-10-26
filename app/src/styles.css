@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
 
 :root, [data-bs-theme="light"] {
   --bs-font-sans-serif: "Inter", sans-serif;
+  --bs-font-monospace: "JetBrains Mono", monospace;
   --bs-body-bg: #e9f1fb;
   --bs-body-color: #2e3036;
   --bs-heading-color: #2e3036;
@@ -169,6 +171,15 @@ a {
   border-bottom-right-radius: var(--bs-border-radius);
 }
 
+.card-header {
+  color: var(--bs-list-group-item-header-color);
+  background-color: var(--bs-list-group-item-header-bg);
+}
+
+.card-header h1, .card-header h2, .card-header h3, .card-header h4, .card-header h5, .card-header h6 {
+  color: inherit;
+}
+
 .card-image {
   background-size: cover;
   background-position: center;
@@ -268,6 +279,12 @@ a {
   border-color: #e6e6e6;
 }
 
+@media (min-width: 576px) {
+  .form-input-otp {
+    width: 220px;
+  }
+}
+
 
 /* Buttons */
 .btn {
@@ -340,6 +357,7 @@ a {
 
 .btn-link {
   text-decoration: none;
+  box-shadow: none;
 }
 
 
@@ -411,6 +429,10 @@ a {
 .logo-splash {
   height: 5rem;
   max-width: 100%;
+}
+
+.badge-code {
+  font-size: 0.8rem;
 }
 
 .list-group-section {

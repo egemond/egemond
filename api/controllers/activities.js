@@ -39,11 +39,11 @@ const getActivities = (req, res) => {
     .populate("currency")
     .exec((error, result) => {
       if (error) {
-        res.status(500).json({
+        return res.status(500).json({
           message: "The data could not be retrieved.",
         });
       } else {
-        res.status(200).json(result);
+        return res.status(200).json(result);
       }
     });
 };
@@ -62,15 +62,15 @@ const getActivity = (req, res) => {
       .populate("currency")
       .exec((error, result) => {
         if (!result) {
-          res.status(404).json({
+          return res.status(404).json({
             message: "The activity with this identifier doesn't exist.",
           });
         } else if (error) {
-          res.status(500).json({
+          return res.status(500).json({
             message: "The data could not be retrieved.",
           });
         } else {
-          res.status(200).json(result);
+          return res.status(200).json(result);
         }
       });
   } else {
@@ -82,7 +82,7 @@ const getActivity = (req, res) => {
 
 const createActivity = (req, res) => {
   if (!req.body.amount || !req.body.category || !req.body.currency || !req.body.date || !req.body.title) {
-    res.status(400).json({
+    return res.status(400).json({
       message: "Required data missing.",
     });
   } else {
@@ -101,11 +101,11 @@ const createActivity = (req, res) => {
       },
       (error, result) => {
         if (error) {
-          res.status(400).json({
+          return res.status(400).json({
             message: "Required data missing.",
           });
         } else {
-          res.status(201).json(result);
+          return res.status(201).json(result);
         }
       }
     );
@@ -116,17 +116,17 @@ const updateActivity = (req, res) => {
   const activityId = req.params.activityId;
   if (activityId) {
     if (!req.body.amount || !req.body.category || !req.body.currency || !req.body.date || !req.body.title) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "Required data missing.",
       });
     } else {
       Activity.findById(activityId).exec((error, result) => {
         if (!result) {
-          res.status(404).json({
+          return res.status(404).json({
             message: "The activity with this identifier doesn't exist.",
           });
         } else if (error) {
-          res.status(500).json({
+          return res.status(500).json({
             message: "The action could not be completed.",
           });
         } else {
@@ -143,15 +143,15 @@ const updateActivity = (req, res) => {
 
             result.save((error, result) => {
               if (error) {
-                res.status(500).json({
+                return res.status(500).json({
                   message: "The action could not be completed.",
                 });
               } else {
-                res.status(200).json(result);
+                return res.status(200).json(result);
               }
             });
           } else {
-            res.status(403).json({
+            return res.status(403).json({
               message: "You do not have permission to access this resource.",
             });
           }
@@ -170,11 +170,11 @@ const deleteActivity = (req, res) => {
   if (activityId) {
     Activity.findById(activityId).exec((error, result) => {
       if (!result) {
-        res.status(404).json({
+        return res.status(404).json({
           message: "The activity with this identifier doesn't exist.",
         });
       } else if (error) {
-        res.status(500).json({
+        return res.status(500).json({
           message: "The action could not be completed.",
         });
       } else {
@@ -186,18 +186,18 @@ const deleteActivity = (req, res) => {
                   message: "The action could not be completed.",
                 });
               } else {
-                res.status(204).json(null);
+                return res.status(204).json(null);
               }
             });
         } else {
-          res.status(403).json({
+          return res.status(403).json({
             message: "You do not have permission to access this resource.",
           });
         }
       }
     });
   } else {
-    res.status(404).json({
+    return res.status(404).json({
       message: "Required parameter missing.",
     });
   }

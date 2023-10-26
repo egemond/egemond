@@ -10,24 +10,26 @@
   <div class="mb-3">
     <h3>{{ "Settings" | localize}}</h3>
   </div>
-  <div *ngIf="error.message" class="alert alert-{{ error.type }}" role="alert">
-    {{ error.message | localize}}
-  </div>
   <div class="row justify-content-between">
     <div class="col-md-4 col-xl-3 overflow-auto mb-3">
       <ul class="nav flex-md-column flex-nowrap nav-pills" id="pills-tab" role="tablist">
         <li class="nav-item me-1 me-md-0 mb-md-1" role="presentation">
-          <button class="nav-link text-nowrap text-start w-100 active" id="themeTab" data-bs-toggle="pill" data-bs-target="#theme" type="button" role="tab" aria-controls="theme" aria-selected="true" (click)="changeTab()">
+          <button class="nav-link text-nowrap text-start w-100 active" id="themeTab" data-bs-toggle="pill" data-bs-target="#theme" type="button" role="tab" aria-controls="theme" aria-selected="true">
             <span>{{ "Theme" | localize}}</span>
           </button>
         </li>
         <li class="nav-item mx-1 mx-md-0 my-md-1" role="presentation">
-          <button class="nav-link text-nowrap text-start w-100" id="userAccountTab" data-bs-toggle="pill" data-bs-target="#userAccount" type="button" role="tab" aria-controls="userAccount" aria-selected="false" (click)="changeTab()">
+          <button class="nav-link text-nowrap text-start w-100" id="userAccountTab" data-bs-toggle="pill" data-bs-target="#userAccount" type="button" role="tab" aria-controls="userAccount" aria-selected="false">
             <span>{{ "Account" | localize}}</span>
           </button>
         </li>
+        <li class="nav-item mx-1 mx-md-0 my-md-1" role="presentation">
+          <button class="nav-link text-nowrap text-start w-100" id="securityTab" data-bs-toggle="pill" data-bs-target="#security" type="button" role="tab" aria-controls="security" aria-selected="false">
+            <span>{{ "Security" | localize}}</span>
+          </button>
+        </li>
         <li class="nav-item ms-1 ms-md-0 mt-md-1" role="presentation">
-          <button class="nav-link text-nowrap text-start w-100" id="languageTab" data-bs-toggle="pill" data-bs-target="#language" type="button" role="tab" aria-controls="language" aria-selected="false" (click)="changeTab()">
+          <button class="nav-link text-nowrap text-start w-100" id="languageTab" data-bs-toggle="pill" data-bs-target="#language" type="button" role="tab" aria-controls="language" aria-selected="false">
             <span>{{ "Language" | localize}}</span>
           </button>
         </li>
@@ -37,90 +39,29 @@
       <div class="tab-content" id="pills-tabContent">
 
         <div class="tab-pane fade show active" id="theme" role="tabpanel" aria-labelledby="themeTab" tabindex="0">
-          <div class="mb-0">
-            <h4>{{ "Theme" | localize }}</h4>
-            <ul class="list-group list-group-flush rounded list-group-shadow mt-0">
-              <li class="list-group-item" [ngClass]="{ 'active': user.theme == 'light', 'disabled': saving }" (click)="changeTheme('light')">
-                {{ "Light" | localize }}
-              </li>
-              <li class="list-group-item" [ngClass]="{ 'active': user.theme == 'dark', 'disabled': saving }" (click)="changeTheme('dark')">
-                {{ "Dark" | localize }}
-              </li>
-            </ul>
-          </div>
+          <app-settings-theme [(user)]="user"></app-settings-theme>
         </div>
 
         <div class="tab-pane fade" id="userAccount" role="tabpanel" aria-labelledby="userAccountTab" tabindex="1">
           <div class="mb-3">
-            <h4>{{ "Update account" | localize }}</h4>
-            <div class="card">
-              <div class="card-body">
-                <form (ngSubmit)="updateAccount()" role="form">
-                  <div class="mb-3">
-                    <label class="small text-secondary" for="email">
-                      {{ "Email" | localize}}
-                    </label>
-                    <input [(ngModel)]="user.email" type="email" class="form-control form-input" [ngClass]="{ 'is-invalid': !user.email && submitted }" id="email" name="email" />
-                    <small *ngIf="!user.email && submitted" class="form-text text-danger">
-                      {{ "This field is required." | localize}}
-                    </small>
-                  </div>
-                  <div class="mb-3">
-                    <label class="small text-secondary" for="password">
-                      {{ "Password" | localize}}
-                    </label>
-                    <input [(ngModel)]="user.password" type="password" class="form-control form-input" [ngClass]="{ 'is-invalid': !user.password && submitted }" id="password" name="password" />
-                    <small *ngIf="!user.password && submitted" class="form-text text-danger">
-                      {{ "This field is required." | localize}}
-                    </small>
-                  </div>
-                  <div class="text-end">
-                    <button type="submit" class="btn btn-primary position-relative" [disabled]="saving">
-                      <span [ngClass]="{ 'invisible': saving }">{{ "Save" | localize}}</span>
-                      <ng-container *ngIf="saving">
-                        <span class="spinner-border spinner-border-sm btn-spinner" role="status" aria-hidden="true"></span>
-                        <span class="visually-hidden">{{ "Loading" | localize }} …</span>
-                      </ng-container>
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
+            <app-settings-update-account [(user)]="user"></app-settings-update-account>
           </div>
           <div class="mb-0">
-            <h4>{{ "Delete account" | localize }}</h4>
-            <div class="card">
-              <div class="card-body">
-                <p>{{ "Deleting your account permanently removes all your account information and associated data. You will not be able to recover any data you have added." | localize }}</p>
-                <div class="mb-3">
-                  <div class="form-check">
-                    <input [(ngModel)]="deleteAccountConfirmed" class="form-check-input" type="checkbox" id="deleteAccount">
-                    <label class="form-check-label" for="deleteAccount">{{ "Yes, I want to delete my account" | localize }}</label>
-                  </div>
-                </div>
-                <div class="text-end">
-                  <button type="button" class="btn btn-danger position-relative" [disabled]="!deleteAccountConfirmed || saving" (click)="deleteUser()">
-                    <span [ngClass]="{ 'invisible': saving }">{{ "Delete account" | localize}}</span>
-                    <ng-container *ngIf="saving">
-                      <span class="spinner-border spinner-border-sm btn-spinner" role="status" aria-hidden="true"></span>
-                      <span class="visually-hidden">{{ "Loading" | localize }} …</span>
-                    </ng-container>
-                  </button>
-                </div>
-              </div>
-            </div>
+            <app-settings-delete-account [user]="user"></app-settings-delete-account>
           </div>
         </div>
 
-        <div class="tab-pane fade" id="language" role="tabpanel" aria-labelledby="languageTab" tabindex="2">
-          <div class="mb-0">
-            <h4>{{ "Language" | localize }}</h4>
-            <ul class="list-group list-group-flush rounded list-group-shadow mt-0">
-              <li *ngFor="let language of languages" class="list-group-item" [ngClass]="{ 'active': this.user.language == language._id, 'disabled': saving }" (click)="changeLanguage(language._id)">
-                {{ language.language }}
-              </li>
-            </ul>
+        <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="securityTab" tabindex="2">
+          <div class="mb-3">
+            <app-settings-change-password [(user)]="user"></app-settings-change-password>
           </div>
+          <div class="mb-0">
+            <app-settings-two-factor-authentication [user]="user" [loading]="loading" (update)="getUser()"></app-settings-two-factor-authentication>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="language" role="tabpanel" aria-labelledby="languageTab" tabindex="3">
+          <app-settings-language [(user)]="user" [languages]="languages"></app-settings-language>
         </div>
         
       </div>

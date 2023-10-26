@@ -1,9 +1,8 @@
-import { Injectable, Inject } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable } from "rxjs";
 
 import { AppService } from "./app.service";
-
-import { User } from "../models/user";
 
 import { environment } from "../../environments/environment";
 
@@ -15,7 +14,7 @@ export class UsersService {
 
   private apiUrl = `${environment.apiUrl}/api`;
 
-  public getUser(userId: string): Promise<User> {
+  public getUser(userId: string): Observable<any> {
     const url: string = `${this.apiUrl}/users/${userId}`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -23,14 +22,10 @@ export class UsersService {
       }),
     };
 
-    return this.http
-      .get(url, httpProperties)
-      .toPromise()
-      .then((response) => response as User)
-      .catch(this.errorHandler);
+    return this.http.get(url, httpProperties);
   }
 
-  public updateUser(user: any): Promise<User> {
+  public updateUser(user: any): Observable<any> {
     const url: string = `${this.apiUrl}/users/${user._id}`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -38,14 +33,10 @@ export class UsersService {
       }),
     };
 
-    return this.http
-      .put(url, user, httpProperties)
-      .toPromise()
-      .then((response) => response as User)
-      .catch(this.errorHandler);
+    return this.http.put(url, user, httpProperties);
   }
 
-  public deleteUser(userId: string): Promise<null> {
+  public deleteUser(userId: string): Observable<any> {
     const url: string = `${this.apiUrl}/users/${userId}`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -53,18 +44,6 @@ export class UsersService {
       }),
     };
 
-    return this.http
-      .delete(url, httpProperties)
-      .toPromise()
-      .then()
-      .catch(this.errorHandler);
-  }
-
-  private errorHandler(error: any): Promise<any> {
-    if (error.name === "HttpErrorResponse") {
-      error.message = "The data could not be retrieved.";
-    }
-
-    return Promise.reject(error.error.message || "The data could not be retrieved.");
+    return this.http.delete(url, httpProperties);
   }
 }

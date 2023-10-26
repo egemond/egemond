@@ -70,10 +70,9 @@ export class ActivityFormComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private getCategories(): Promise<void> {
-    return this.categoriesService
-      .getCategories()
-      .then((categories) => {
+  private getCategories() {
+    this.categoriesService.getCategories().subscribe({
+      next: ((categories) => {
         this.categories = categories.sort((x, y) => {
           let titleX = this.localizePipe.transform(x.title);
           let titleY = this.localizePipe.transform(y.title);
@@ -86,22 +85,27 @@ export class ActivityFormComponent implements OnInit, OnChanges, OnDestroy {
             return 0;
           }
         });
-      })
-      .catch((error) => {
-        this.retrievalError = error;
-      });
+      }),
+      error: ((error) => {
+        this.retrievalError = this.appService.getErrorMessage(error);
+      }),
+    }).add(() => {
+      this.isLoaded();
+    });
   }
 
-  private getCurrency(): Promise<void> {
+  private getCurrency() {
     let currencyId = this.appService.getCurrency();
-    return this.currenciesService
-      .getCurrency(currencyId)
-      .then((currency) => {
+    this.currenciesService.getCurrency(currencyId).subscribe({
+      next: ((currency) => {
         this.currency = currency;
-      })
-      .catch((error) => {
-        this.retrievalError = error;
-      });
+      }),
+      error: ((error) => {
+        this.retrievalError = this.appService.getErrorMessage(error);
+      }),
+    }).add(() => {
+      this.isLoaded();
+    });
   }
 
   public formatAmount() {
@@ -172,8 +176,8 @@ export class ActivityFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getCategories().then(() => this.isLoaded());
-    this.getCurrency().then(() => this.isLoaded());
+    this.getCategories();
+    this.getCurrency();
 
     this.errorSubscription = this.errorEvent.subscribe((error) => {
       this.error = error;

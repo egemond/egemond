@@ -49,25 +49,27 @@ export class SignupComponent {
 
     this.signingUp = true;
 
-    this.authenticationService
-      .signUpAttempt(this.user)
-      .then(() => {
-        this.currenciesService.getCurrencies()
-          .then((currencies) => {
+    this.authenticationService.signUpAttempt(this.user).subscribe({
+      next: (() => {
+        this.currenciesService.getCurrencies().subscribe({
+          next: ((currencies) => {
             this.currencies = currencies;
             this.step++;
-          })
-          .catch((error) => {
-            this.retrievalError = error;
-          });
-      })
-      .catch((error) => {
+          }),
+          error: ((error) => {
+            this.retrievalError = this.appService.getErrorMessage(error);
+          }),
+        }).add(() => {
+          this.signingUp = false;
+        });
+      }),
+      error: ((error) => {
         this.error.type = "danger";
-        this.error.message = error;
-      })
-      .finally(() => {
-        this.signingUp = false;
-      });
+        this.error.message = this.appService.getErrorMessage(error);
+      }),
+    }).add(() => {
+      this.signingUp = false;
+    });
   }
 
   public signUp(currencyId: string) {
@@ -76,18 +78,18 @@ export class SignupComponent {
 
     this.signingUp = true;
 
-    this.authenticationService
-      .signUp(this.user)
-      .then(() => {
+    this.authenticationService.signUp(this.user).subscribe({
+      next: ((result) => {
+        this.appService.signIn(result.token, result.language, result.currency);
         this.router.navigateByUrl("/activities");
-      })
-      .catch((error) => {
+      }),
+      error: ((error) => {
         this.error.type = "danger";
-        this.error.message = error;
-      })
-      .finally(() => {
-        this.signingUp = false;
-      });
+        this.error.message = this.appService.getErrorMessage(error);
+      }),
+    }).add(() => {
+      this.signingUp = false;
+    });
   }
 
   ngOnInit(): void {

@@ -40,8 +40,8 @@ export class ActivitiesComponent implements OnInit {
   public retrievalError: string;
 
   private getActivities(): void {
-    this.activitiesService.getActivities()
-      .then((activities) => {
+    this.activitiesService.getActivities().subscribe({
+      next: ((activities) => {
         let total = 0.0;
         let years = {};
 
@@ -217,10 +217,11 @@ export class ActivitiesComponent implements OnInit {
             fontFamily: "'Inter', sans-serif",
           },
         });
-      })
-      .catch((error) => {
-        this.retrievalError = error;
-      });
+      }),
+      error: ((error) => {
+        this.retrievalError = this.appService.getErrorMessage(error);
+      }),
+    });
   }
 
   ngOnInit(): void {

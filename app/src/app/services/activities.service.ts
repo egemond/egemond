@@ -1,9 +1,8 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 
 import { AppService } from "./app.service";
-
-import { Activity } from "../models/activity";
 
 import { environment } from "../../environments/environment";
 
@@ -15,7 +14,7 @@ export class ActivitiesService {
 
   private apiUrl = `${environment.apiUrl}/api`;
 
-  public getActivities(): Promise<Activity[]> {
+  public getActivities(): Observable<any> {
     const url: string = `${this.apiUrl}/activities`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -23,14 +22,10 @@ export class ActivitiesService {
       })
     };
 
-    return this.http
-      .get(url, httpProperties)
-      .toPromise()
-      .then(response => response as Activity[])
-      .catch(this.errorHandler);
+    return this.http.get(url, httpProperties);
   }
 
-  public getActivitiesByTag(tag: string): Promise<any> {
+  public getActivitiesByTag(tag: string): Observable<any> {
     const url: string = `${this.apiUrl}/activities?tag=${tag}`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -38,14 +33,10 @@ export class ActivitiesService {
       })
     };
 
-    return this.http
-      .get(url, httpProperties)
-      .toPromise()
-      .then(response => response as Activity[])
-      .catch(this.errorHandler);
+    return this.http.get(url, httpProperties);
   }
 
-  public getActivity(activityId: string): Promise<Activity> {
+  public getActivity(activityId: string): Observable<any> {
     const url: string = `${this.apiUrl}/activities/${activityId}`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -53,14 +44,10 @@ export class ActivitiesService {
       })
     };
 
-    return this.http
-      .get(url, httpProperties)
-      .toPromise()
-      .then(response => response as Activity)
-      .catch(this.errorHandler);
+    return this.http.get(url, httpProperties);
   }
 
-  public createActivity(activityData: any): Promise<Activity> {
+  public createActivity(activityData: any): Observable<any> {
     const url: string = `${this.apiUrl}/activities`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -68,17 +55,10 @@ export class ActivitiesService {
       })
     };
 
-    return this.http
-      .post(url, activityData, httpProperties)
-      .toPromise()
-      .then(response => response as Activity)
-      .catch(this.errorHandler);
+    return this.http.post(url, activityData, httpProperties);
   }
 
-  public updateActivity(
-    activityId: string,
-    activityData: any
-  ): Promise<Activity> {
+  public updateActivity(activityId: string, activityData: any): Observable<any> {
     const url: string = `${this.apiUrl}/activities/${activityId}`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -86,14 +66,10 @@ export class ActivitiesService {
       })
     };
 
-    return this.http
-      .put(url, activityData, httpProperties)
-      .toPromise()
-      .then(response => response as Activity)
-      .catch(this.errorHandler);
+    return this.http.put(url, activityData, httpProperties);
   }
 
-  public deleteActivity(activityId: string): Promise<null> {
+  public deleteActivity(activityId: string): Observable<any> {
     const url: string = `${this.apiUrl}/activities/${activityId}`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -101,18 +77,6 @@ export class ActivitiesService {
       })
     };
 
-    return this.http
-      .delete(url, httpProperties)
-      .toPromise()
-      .then()
-      .catch(this.errorHandler);
-  }
-
-  private errorHandler(error: any): Promise<any> {
-    if (error.name === "HttpErrorResponse") {
-      error.message = "The data could not be retrieved.";
-    }
-
-    return Promise.reject(error.error.message || "The data could not be retrieved.");
+    return this.http.delete(url, httpProperties);
   }
 }

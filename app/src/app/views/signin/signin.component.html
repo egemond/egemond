@@ -6,39 +6,86 @@
       </div>
     </div>
   </div>
-  <h4 class="text-center mb-3">{{ "Sign In" | localize}}</h4>
-  <div class="card">
-    <div class="card-body">
-      <div *ngIf="error.message" class="alert alert-{{ error.type }}" role="alert">
-        {{ error.message | localize}}
+  <ng-container *ngIf="step == 'SignIn'">
+    <h4 class="text-center mb-3">{{ "Sign In" | localize }}</h4>
+    <div class="card">
+      <div class="card-body">
+        <div *ngIf="error.message" class="alert alert-{{ error.type }}" role="alert">
+          {{ error.message | localize }}
+        </div>
+        <form (ngSubmit)="signIn()" role="form">
+          <div class="mb-3">
+            <label class="small text-secondary" for="email">
+              {{ "Email" | localize }}
+            </label>
+            <input [(ngModel)]="user.email" type="email" class="form-control form-input" [ngClass]="{ 'is-invalid': !user.email && submitted }" id="email" name="email" required />
+            <small *ngIf="!user.email && submitted" class="form-text text-danger">
+              {{ "This field is required." | localize }}
+            </small>
+          </div>
+          <div class="mb-3">
+            <label class="small text-secondary" for="password">
+              {{ "Password" | localize }}
+            </label>
+            <input [(ngModel)]="user.password" type="password" class="form-control form-input" [ngClass]="{ 'is-invalid': !user.password && submitted }" id="password" name="password" required />
+            <small *ngIf="!user.password && submitted" class="form-text text-danger">
+              {{ "This field is required." | localize }}
+            </small>
+          </div>
+          <button-spinner [type]="'submit'" [variant]="'primary'" [label]="'Sign In' | localize" [loading]="signingIn" [classes]="'d-block w-100'"></button-spinner>
+        </form>
       </div>
-      <form (ngSubmit)="signIn()" role="form">
-        <div class="mb-3">
-          <label class="small text-secondary" for="email">
-            {{ "Email" | localize}}
-          </label>
-          <input [(ngModel)]="user.email" type="email" class="form-control form-input" [ngClass]="{ 'is-invalid': !user.email && submitted }" id="email" name="email" required />
-          <small *ngIf="!user.email && submitted" class="form-text text-danger">
-            {{ "This field is required." | localize}}
-          </small>
-        </div>
-        <div class="mb-3">
-          <label class="small text-secondary" for="password">
-            {{ "Password" | localize}}
-          </label>
-          <input [(ngModel)]="user.password" type="password" class="form-control form-input" [ngClass]="{ 'is-invalid': !user.password && submitted }" id="password" name="password" required />
-          <small *ngIf="!user.password && submitted" class="form-text text-danger">
-            {{ "This field is required." | localize}}
-          </small>
-        </div>
-        <button type="submit" class="btn btn-primary d-block w-100 position-relative" [disabled]="signingIn">
-          <span [ngClass]="{ 'invisible': signingIn }">{{ "Sign In" | localize}}</span>
-          <ng-container *ngIf="signingIn">
-            <span class="spinner-border spinner-border-sm btn-spinner" role="status" aria-hidden="true"></span>
-            <span class="visually-hidden">{{ "Loading" | localize }} …</span>
-          </ng-container>
-        </button>
-      </form>
     </div>
-  </div>
+  </ng-container>
+  <ng-container *ngIf="step == 'AuthenticationCode'">
+    <h4 class="text-center mb-3">{{ "Two-factor authentication" | localize }}</h4>
+    <div class="card mb-2">
+      <div class="card-body">
+        <div *ngIf="error.message" class="alert alert-{{ error.type }}" role="alert">
+          {{ error.message | localize }}
+        </div>
+        <form (ngSubmit)="verify2FA()" role="form">
+          <div class="mb-3">
+            <label class="small text-secondary" for="authenticationCode">
+              {{ "Authentication code" | localize }}
+            </label>
+            <input [(ngModel)]="authenticationCode" type="text" class="form-control form-input" [ngClass]="{ 'is-invalid': !authenticationCode && submitted }" id="authenticationCode" name="authenticationCode" placeholder="XXXXXX" maxlength="6" required />
+            <small *ngIf="!authenticationCode && submitted" class="form-text text-danger">
+              {{ "This field is required." | localize }}
+            </small>
+          </div>
+          <button-spinner [type]="'submit'" [variant]="'primary'" [label]="'Verify' | localize" [loading]="signingIn" [classes]="'d-block w-100'"></button-spinner>
+        </form>
+      </div>
+    </div>
+    <div class="text-center">
+      <button class="btn btn-sm btn-link" (click)="changeStep('RecoveryCode')">{{ "Use a recovery code" | localize }}</button>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="step == 'RecoveryCode'">
+    <h4 class="text-center">{{ "Use a recovery code" | localize }}</h4>
+    <p class="text-center mb-3">{{ "If you are unable to sign in with an authentication code from your authenticator app, you can sign in using one of your recovery codes." | localize }}</p>
+    <div class="card mb-2">
+      <div class="card-body">
+        <div *ngIf="error.message" class="alert alert-{{ error.type }}" role="alert">
+          {{ error.message | localize }}
+        </div>
+        <form (ngSubmit)="verifyRecoveryCode()" role="form">
+          <div class="mb-3">
+            <label class="small text-secondary" for="authenticationCode">
+              {{ "Recovery code" | localize }}
+            </label>
+            <input [(ngModel)]="recoveryCode" type="text" class="form-control form-input" [ngClass]="{ 'is-invalid': !recoveryCode && submitted }" id="recoveryCode" name="recoveryCode" required />
+            <small *ngIf="!recoveryCode && submitted" class="form-text text-danger">
+              {{ "This field is required." | localize }}
+            </small>
+          </div>
+          <button-spinner [type]="'submit'" [variant]="'primary'" [label]="'Verify' | localize" [loading]="signingIn" [classes]="'d-block w-100'"></button-spinner>
+        </form>
+      </div>
+    </div>
+    <div class="text-center">
+      <button class="btn btn-sm btn-link" (click)="changeStep('AuthenticationCode')">{{ "Use an authentication code" | localize }}</button>
+    </div>
+  </ng-container>
 </div>

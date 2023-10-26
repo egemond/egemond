@@ -46,17 +46,17 @@ app.get("*", (req, res, next) => {
 
 app.use((err, req, res, next) => {
   if (err.status == 401) {
-    res.status(401).json({
+    return res.status(401).json({
       message: "You are not signed in.",
     });
   }
   else if (err.status == 404) {
-    res.status(404).json({
+    return res.status(404).json({
       message: "This resource doesn't exist.",
     });
   }
   else if (err) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "The action could not be completed.",
     });
   }

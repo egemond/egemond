@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { Subject } from "rxjs";
 
 import { ActivitiesService } from "../../services/activities.service";
+import { AppService } from "src/app/services/app.service";
 
 import { LocalizePipe } from "../../pipes/localize.pipe";
 
@@ -15,7 +16,7 @@ import { LocalizePipe } from "../../pipes/localize.pipe";
   ],
 })
 export class ActivityAddComponent {
-  constructor(private router: Router, private activitiesService: ActivitiesService) {
+  constructor(private router: Router, private activitiesService: ActivitiesService, private appService: AppService) {
     let date = new Date();
 
     this.activity.day = ("0" + date.getDate().toString()).slice(-2);
@@ -46,14 +47,16 @@ export class ActivityAddComponent {
   public createActivity(activity: any): void {
     this.activitiesService
       .createActivity(activity)
-      .then((activity) => {
-        this.router.navigateByUrl("/activities");
-      })
-      .catch((error) => {
-        this.errorSubject.next({
-          type: "danger",
-          message: error,
-        });
+      .subscribe({
+        next: ((activity) => {
+          this.router.navigateByUrl("/activities");
+        }),
+        error: ((error) => {
+          this.errorSubject.next({
+            type: "danger",
+            message: this.appService.getErrorMessage(error),
+          });
+        }),
       });
   }
 }
