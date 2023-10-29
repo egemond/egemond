@@ -40,6 +40,7 @@ const signIn = (req, res) => {
               token: result.generateToken(),
               language: result.language,
               currency: result.currency,
+              theme: result.theme,
             });
           }
         }
@@ -85,6 +86,7 @@ const signUp = (req, res) => {
                   token: user.generateToken(),
                   language: user.language,
                   currency: user.currency,
+                  theme: user.theme,
                 });
               }
             });
@@ -353,6 +355,7 @@ const verify2FA = (req, res) => {
                   token: result.generateToken(),
                   language: result.language,
                   currency: result.currency,
+                  theme: result.theme,
                 });
               } else {
                 return res.status(403).json({
@@ -425,6 +428,7 @@ const verifyRecoveryCode = (req, res) => {
                     token: result.generateToken(),
                     language: result.language,
                     currency: result.currency,
+                    theme: result.theme,
                   });
                 }
               });

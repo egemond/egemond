@@ -39,6 +39,9 @@ export class SettingsComponent implements OnInit {
           }
         }
 
+        this.appService.setLanguage(user.language);
+        this.appService.setTheme(user.theme);
+
         this.loading = false;
       }),
       error: ((error) => {

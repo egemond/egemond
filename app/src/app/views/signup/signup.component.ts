@@ -80,7 +80,7 @@ export class SignupComponent {
 
     this.authenticationService.signUp(this.user).subscribe({
       next: ((result) => {
-        this.appService.signIn(result.token, result.language, result.currency);
+        this.appService.signIn(result.token, result.language, result.currency, result.theme);
         this.router.navigateByUrl("/activities");
       }),
       error: ((error) => {

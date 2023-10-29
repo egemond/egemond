@@ -1,9 +1,10 @@
 import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
+import { APP_INITIALIZER, NgModule } from "@angular/core";
 import { registerLocaleData } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
 import { RouterModule } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { tap } from "rxjs";
 import { QRCodeModule } from "angularx-qrcode";
 
 import en from "@angular/common/locales/en";
@@ -13,6 +14,8 @@ import sl from "@angular/common/locales/sl";
 registerLocaleData(sl);
 
 import { AuthenticationGuardService as AuthenticationGuard } from "./services/authentication-guard.service";
+import { AppService } from "./services/app.service";
+import { UsersService } from "./services/users.service";
 
 import { LocalizePipe } from "./pipes/localize.pipe";
 import { MonthPipe } from "./pipes/month.pipe";
@@ -35,6 +38,18 @@ import { SettingsLanguageComponent } from "./views/settings/settings-language/se
 import { SettingsChangePasswordComponent } from "./views/settings/settings-change-password/settings-change-password.component";
 import { SettingsUpdateAccountComponent } from "./views/settings/settings-update-account/settings-update-account.component";
 import { SettingsDeleteAccountComponent } from "./views/settings/settings-delete-account/settings-delete-account.component";
+
+export function initializeAppFactory(appService: AppService, usersService: UsersService) {
+  const user = appService.getCurrentUser();
+  if (user != null) {
+    return () => usersService.getUser(user._id).pipe(tap((user: any) => {
+      appService.setLanguage(user.language);
+      appService.setCurrency(user.currency);
+      appService.setTheme(user.theme);
+    }));
+  }
+  return () => {};
+}
 
 @NgModule({
   declarations: [
@@ -112,7 +127,15 @@ import { SettingsDeleteAccountComponent } from "./views/settings/settings-delete
     ]),
   ],
   exports: [RouterModule],
-  providers: [LocalizePipe],
+  providers: [
+    LocalizePipe,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeAppFactory,
+      multi: true,
+      deps: [AppService, UsersService],
+    },
+  ],
   bootstrap: [LayoutComponent]
 })
 export class AppModule {}

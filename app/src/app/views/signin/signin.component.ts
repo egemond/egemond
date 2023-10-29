@@ -44,7 +44,7 @@ export class SigninComponent implements OnInit {
 
     this.authenticationService.signIn(this.user).subscribe({
       next: ((result) => {
-        this.appService.signIn(result.token, result.language, result.currency);
+        this.appService.signIn(result.token, result.language, result.currency, result.theme);
         this.router.navigateByUrl("/activities");
       }),
       error: ((error) => {
@@ -76,7 +76,7 @@ export class SigninComponent implements OnInit {
 
     this.authenticationService.verify2FA(this.user, this.authenticationCode).subscribe({
       next: ((result) => {
-        this.appService.signIn(result.token, result.language, result.currency);
+        this.appService.signIn(result.token, result.language, result.currency, result.theme);
         this.router.navigateByUrl("/activities");
       }),
       error: ((error) => {
@@ -97,7 +97,7 @@ export class SigninComponent implements OnInit {
 
     this.authenticationService.verifyRecoveryCode(this.user, this.recoveryCode).subscribe({
       next: ((result) => {
-        this.appService.signIn(result.token, result.language, result.currency);
+        this.appService.signIn(result.token, result.language, result.currency, result.theme);
         this.router.navigateByUrl("/activities");
       }),
       error: ((error) => {

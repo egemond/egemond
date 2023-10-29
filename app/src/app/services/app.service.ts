@@ -3,7 +3,6 @@ import { Inject, Injectable } from "@angular/core";
 import { BROWSER_STORAGE } from "../models/storage";
 import { Language } from "../models/language";
 import { User } from "../models/user";
-import { Currency } from "../models/currency";
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +11,11 @@ export class AppService {
 
   constructor(@Inject(BROWSER_STORAGE) private storage: Storage) { }
 
-  public signIn(token: string, language: string, currency: string) {
+  public signIn(token: string, language: string, currency: string, theme: string) {
     this.setToken(token);
     this.setLanguage(language);
     this.setCurrency(currency);
+    this.setTheme(theme);
   }
 
   public signOut(): void {
@@ -96,6 +96,7 @@ export class AppService {
   }
 
   public setTheme(value: string): void {
+    document.body.setAttribute("data-bs-theme", value);
     this.storage.setItem("theme", value);
   }
 

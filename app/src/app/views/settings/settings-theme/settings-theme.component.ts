@@ -36,8 +36,6 @@ export class SettingsThemeComponent {
     return this.usersService.updateUser(this.user).subscribe({
       next: ((user) => {
         this.appService.setLanguage(user.language);
-
-        document.body.setAttribute("data-bs-theme", user.theme);
         this.appService.setTheme(user.theme);
 
         this.alert = {
