@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
+import { Category } from "../models/category";
+
 import { environment } from "../../environments/environment";
 
 @Injectable({
@@ -12,8 +14,8 @@ export class CategoriesService {
 
   private apiUrl = `${environment.apiUrl}/api`;
 
-  public getCategories(): Observable<any> {
+  public getCategories(): Observable<Category[]> {
     const url: string = `${this.apiUrl}/categories`;
-    return this.http.get(url);
+    return this.http.get(url) as Observable<Category[]>;
   }
 }

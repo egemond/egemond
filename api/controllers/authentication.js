@@ -172,8 +172,6 @@ const configure2FA = (req, res) => {
 
           result.save((error, result) => {
             if (error) {
-              console.error(error);
-
               return res.status(500).json({
                 message: "The action could not be completed.",
               });

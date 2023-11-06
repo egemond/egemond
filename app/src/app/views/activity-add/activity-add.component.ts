@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
-import { Subject } from "rxjs";
+import { FormBuilder, Validators } from "@angular/forms";
 
 import { ActivitiesService } from "../../services/activities.service";
 import { AppService } from "src/app/services/app.service";
@@ -17,29 +17,35 @@ import { LocalizePipe } from "../../pipes/localize.pipe";
 })
 export class ActivityAddComponent {
   constructor(private router: Router, private activitiesService: ActivitiesService, private appService: AppService) {
-    let date = new Date();
+    let today = new Date();
 
-    this.activity.day = ("0" + date.getDate().toString()).slice(-2);
-    this.activity.month = ("0" + (date.getMonth() + 1).toString()).slice(-2);
-    this.activity.year = date.getFullYear().toString();
+    this.activity.patchValue({
+      day: `0${today.getDate()}`.slice(-2),
+      month: `0${today.getMonth() + 1}`.slice(-2),
+      year: today.getFullYear().toString(),
+    });
   }
+  
+  private formBuilder = new FormBuilder();
+  public activity = this.formBuilder.group({
+    title: ["", Validators.required],
+    category: ["", Validators.required],
+    amount: [<undefined | number>undefined, Validators.required],
+    type: [<"income" | "expense">"expense", Validators.required],
+    day: [<undefined | String>undefined, Validators.required],
+    month: [<undefined | String>undefined, Validators.required],
+    year: [<undefined | String>undefined, Validators.required],
+    tags: [""],
+    description: [""],
+    isExcluded: [false, Validators.required],
+  });
 
-  public activity = {
-    title: "",
-    category: "",
-    amount: "",
-    type: "expense",
-    day: "",
-    month: "",
-    year: "",
-    tags: "",
-    description: "",
+  public alert: {
+    variant: string,
+    message: string,
   };
 
-  errorSubject: Subject<any> = new Subject<any>();
-
   public loading = true;
-
   public onLoaded(): void {
     this.loading = false;
   }
@@ -52,10 +58,10 @@ export class ActivityAddComponent {
           this.router.navigateByUrl("/activities");
         }),
         error: ((error) => {
-          this.errorSubject.next({
-            type: "danger",
+          this.alert = {
+            variant: "danger",
             message: this.appService.getErrorMessage(error),
-          });
+          };
         }),
       });
   }

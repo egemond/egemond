@@ -30,8 +30,8 @@ import { ActivityEditComponent } from "./views/activity-edit/activity-edit.compo
 import { StatisticsComponent } from "./views/statistics/statistics.component";
 import { SettingsComponent } from "./views/settings/settings.component";
 import { ActivityFormComponent } from "./components/activity-form/activity-form.component";
-import { SpinnerComponent } from "./components/spinner/spinner.component";
-import { ButtonSpinnerComponent } from "./components/button-spinner/button-spinner.component";
+import { SpinnerComponent } from "./components/common/spinner/spinner.component";
+import { ButtonSpinnerComponent } from "./components/common/button-spinner/button-spinner.component";
 import { SettingsTwoFactorAuthenticationComponent } from "./views/settings/settings-two-factor-authentication/settings-two-factor-authentication.component";
 import { SettingsThemeComponent } from "./views/settings/settings-theme/settings-theme.component";
 import { SettingsLanguageComponent } from "./views/settings/settings-language/settings-language.component";

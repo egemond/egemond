@@ -1,22 +1,18 @@
-<ng-container *ngIf="activity">
+<ng-container *ngIf="activityId">
   <div class="mb-3" *ngIf="!loading">
     <div class="row justify-content-end">
       <div class="col text-start">
         <h3>{{ "Edit activity" | localize}}</h3>
-        <a routerLink="/activity/{{ activity?._id }}" *ngIf="activity && activity._id">
+        <a routerLink="/activity/{{ activityId }}">
           <i class="fas fa-arrow-left me-2"></i>
           <span>{{ "Back to activity" | localize}}</span>
-        </a>
-        <a routerLink="/activities" *ngIf="activity && !activity._id">
-          <i class="fas fa-arrow-left me-2"></i>
-          <span>{{ "Back to Overview" | localize}}</span>
         </a>
       </div>
     </div>
   </div>
-  <app-activity-form [activity]="activity" [errorEvent]="errorSubject.asObservable()" (loaded)="onLoaded()" (saveActivity)="updateActivity($event)"></app-activity-form>
+  <app-activity-form [activity]="activity" [alert]="alert" (loaded)="onLoaded()" (saveActivity)="updateActivity($event)"></app-activity-form>
 </ng-container>
-<ng-container *ngIf="!retrievalError && !activity">
+<ng-container *ngIf="!retrievalError && !activityId">
   <div class="text-center mt-3">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">{{ "Loading" | localize }} …</span>

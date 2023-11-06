@@ -11,7 +11,7 @@ export class AppService {
 
   constructor(@Inject(BROWSER_STORAGE) private storage: Storage) { }
 
-  public signIn(token: string, language: string, currency: string, theme: string) {
+  public signIn(token: string, language: string, currency: string, theme: string): void {
     this.setToken(token);
     this.setLanguage(language);
     this.setCurrency(currency);

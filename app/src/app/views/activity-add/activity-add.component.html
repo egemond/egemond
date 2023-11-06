@@ -9,4 +9,4 @@
     </div>
   </div>
 </div>
-<app-activity-form [activity]="activity" [errorEvent]="errorSubject.asObservable()" (loaded)="onLoaded()" (saveActivity)="createActivity($event)"></app-activity-form>
+<app-activity-form [activity]="activity" [alert]="alert" (loaded)="onLoaded()" (saveActivity)="createActivity($event)"></app-activity-form>

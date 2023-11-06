@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { AppService } from "./app.service";
 
 import { environment } from "../../environments/environment";
+import { User } from "../models/user";
 
 @Injectable({
   providedIn: "root",
@@ -14,7 +15,7 @@ export class UsersService {
 
   private apiUrl = `${environment.apiUrl}/api`;
 
-  public getUser(userId: string): Observable<any> {
+  public getUser(userId: string): Observable<User> {
     const url: string = `${this.apiUrl}/users/${userId}`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -22,10 +23,10 @@ export class UsersService {
       }),
     };
 
-    return this.http.get(url, httpProperties);
+    return this.http.get(url, httpProperties) as Observable<User>;
   }
 
-  public updateUser(user: any): Observable<any> {
+  public updateUser(user: any): Observable<User> {
     const url: string = `${this.apiUrl}/users/${user._id}`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -33,10 +34,10 @@ export class UsersService {
       }),
     };
 
-    return this.http.put(url, user, httpProperties);
+    return this.http.put(url, user, httpProperties) as Observable<User>;
   }
 
-  public deleteUser(userId: string): Observable<any> {
+  public deleteUser(userId: string): Observable<null> {
     const url: string = `${this.apiUrl}/users/${userId}`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -44,6 +45,6 @@ export class UsersService {
       }),
     };
 
-    return this.http.delete(url, httpProperties);
+    return this.http.delete(url, httpProperties) as Observable<null>;
   }
 }

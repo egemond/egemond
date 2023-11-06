@@ -32,9 +32,9 @@ export class SettingsTwoFactorAuthenticationComponent {
   public submitted: boolean = false;
   public saving: boolean = false;
 
-  public alert = {
-    type: "",
-    message: "",
+  public alert: {
+    variant: string,
+    message: string,
   };
 
   public configure2FA() {
@@ -47,8 +47,10 @@ export class SettingsTwoFactorAuthenticationComponent {
         this.setupStarted = true;
       }),
       error: ((error) => {
-        this.alert.type = "danger";
-        this.alert.message = this.appService.getErrorMessage(error);
+        this.alert = {
+          variant: "danger",
+          message: this.appService.getErrorMessage(error),
+        };
       }),
     }).add(() => {
       this.saving = false;
@@ -65,8 +67,10 @@ export class SettingsTwoFactorAuthenticationComponent {
           this.recoveryCodes = recoveryCodes;
         }),
         error: ((error) => {
-          this.alert.type = "danger";
-          this.alert.message = this.appService.getErrorMessage(error);
+          this.alert = {
+            variant: "danger",
+            message: this.appService.getErrorMessage(error),
+          };
         }),
       }).add(() => {
         this.saving = false;
@@ -90,8 +94,10 @@ export class SettingsTwoFactorAuthenticationComponent {
         this.update.emit();
       }),
       error: ((error) => {
-        this.alert.type = "danger";
-        this.alert.message = this.appService.getErrorMessage(error);
+        this.alert = {
+          variant: "danger",
+          message: this.appService.getErrorMessage(error),
+        };
       }),
     }).add(() => {
       this.saving = false;

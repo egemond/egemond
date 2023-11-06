@@ -3,7 +3,7 @@
 </ng-container>
 <ng-container *ngIf="!loading">
   <h4>{{ "Two-factor authentication" | localize }}</h4>
-  <div class="alert alert-{{ alert.type }}" *ngIf="alert && alert.message">
+  <div class="alert alert-{{ alert.variant }}" *ngIf="alert && alert.message">
     {{ alert.message | localize }}
   </div>
   <ng-container *ngIf="user.twoFactorAuthentication && user.twoFactorAuthentication.enabled">

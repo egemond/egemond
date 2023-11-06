@@ -4,6 +4,8 @@ import { Observable } from "rxjs";
 
 import { AppService } from "./app.service";
 
+import { Activity } from "../models/activity";
+
 import { environment } from "../../environments/environment";
 
 @Injectable({
@@ -14,7 +16,7 @@ export class ActivitiesService {
 
   private apiUrl = `${environment.apiUrl}/api`;
 
-  public getActivities(): Observable<any> {
+  public getActivities(): Observable<Activity[]> {
     const url: string = `${this.apiUrl}/activities`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -22,10 +24,10 @@ export class ActivitiesService {
       })
     };
 
-    return this.http.get(url, httpProperties);
+    return this.http.get(url, httpProperties) as Observable<Activity[]>;
   }
 
-  public getActivitiesByTag(tag: string): Observable<any> {
+  public getActivitiesByTag(tag: string): Observable<Activity[]> {
     const url: string = `${this.apiUrl}/activities?tag=${tag}`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -33,10 +35,10 @@ export class ActivitiesService {
       })
     };
 
-    return this.http.get(url, httpProperties);
+    return this.http.get(url, httpProperties) as Observable<Activity[]>;
   }
 
-  public getActivity(activityId: string): Observable<any> {
+  public getActivity(activityId: string): Observable<Activity> {
     const url: string = `${this.apiUrl}/activities/${activityId}`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -44,10 +46,10 @@ export class ActivitiesService {
       })
     };
 
-    return this.http.get(url, httpProperties);
+    return this.http.get(url, httpProperties) as Observable<Activity>;
   }
 
-  public createActivity(activityData: any): Observable<any> {
+  public createActivity(activityData: any): Observable<Activity> {
     const url: string = `${this.apiUrl}/activities`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -55,10 +57,10 @@ export class ActivitiesService {
       })
     };
 
-    return this.http.post(url, activityData, httpProperties);
+    return this.http.post(url, activityData, httpProperties) as Observable<Activity>;
   }
 
-  public updateActivity(activityId: string, activityData: any): Observable<any> {
+  public updateActivity(activityId: string, activityData: any): Observable<Activity> {
     const url: string = `${this.apiUrl}/activities/${activityId}`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -66,10 +68,10 @@ export class ActivitiesService {
       })
     };
 
-    return this.http.put(url, activityData, httpProperties);
+    return this.http.put(url, activityData, httpProperties) as Observable<Activity>;
   }
 
-  public deleteActivity(activityId: string): Observable<any> {
+  public deleteActivity(activityId: string): Observable<null> {
     const url: string = `${this.apiUrl}/activities/${activityId}`;
     const httpProperties = {
       headers: new HttpHeaders({
@@ -77,6 +79,6 @@ export class ActivitiesService {
       })
     };
 
-    return this.http.delete(url, httpProperties);
+    return this.http.delete(url, httpProperties) as Observable<null>;
   }
 }

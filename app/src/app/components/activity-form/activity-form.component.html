@@ -7,26 +7,26 @@
 </div>
 
 <ng-container *ngIf="categories && currency">
-  <div *ngIf="error.message" class="alert alert-{{ error.type }}" role="alert">
-    {{ error.message | localize}}
+  <div *ngIf="alert" class="alert alert-{{ alert.variant }}" role="alert">
+    {{ alert.message | localize}}
   </div>
   <ul class="nav nav-pills mb-3">
     <li class="nav-item">
-      <button class="nav-link me-1" [ngClass]="{ 'active': activity.type === 'expense' }" (click)="switch('expense')">{{ "Expense" | localize }}</button>
+      <button class="nav-link me-1" [ngClass]="{ 'active': activity.value.type === 'expense' }" (click)="switch('expense')">{{ "Expense" | localize }}</button>
     </li>
     <li class="nav-item">
-      <button class="nav-link ms-1" [ngClass]="{ 'active': activity.type === 'income' }" (click)="switch('income')">{{ "Income" | localize }}</button>
+      <button class="nav-link ms-1" [ngClass]="{ 'active': activity.value.type === 'income' }" (click)="switch('income')">{{ "Income" | localize }}</button>
     </li>
   </ul>
   <div class="card">
     <div class="card-body">
-      <form (ngSubmit)="validate()" role="form">
+      <form [formGroup]="activity" (ngSubmit)="validate()" role="form">
         <div class="mb-3">
           <label class="small text-secondary" for="title">
             {{ "Title" | localize}}
           </label>
-          <input [(ngModel)]="activity.title" type="text" class="form-control form-input" [ngClass]="{ 'is-invalid': !activity.title && submitted }" id="title" name="title" />
-          <small *ngIf="!activity.title && submitted" class="form-text text-danger">
+          <input type="text" class="form-control form-input" [ngClass]="{ 'is-invalid': activity.controls.title.invalid && activity.controls.title.touched }" id="title" name="title" formControlName="title" />
+          <small *ngIf="activity.controls.title.invalid && activity.controls.title.touched" class="form-text text-danger">
             {{ "This field is required." | localize}}
           </small>
         </div>
@@ -34,13 +34,13 @@
           <label class="small text-secondary" for="category">
             {{ "Category" | localize}}
           </label>
-          <select [(ngModel)]="activity.category" class="form-select form-input" [ngClass]="{ 'is-invalid': !activity.category && submitted }" id="category" name="category">
+          <select class="form-select form-input" [ngClass]="{ 'is-invalid': activity.controls.category.invalid && activity.controls.category.touched }" id="category" name="category" formControlName="category">
             <option selected disabled></option>
             <option *ngFor="let category of categories" value="{{ category._id }}">
               {{ category.title | localize}}
             </option>
           </select>
-          <small *ngIf="!activity.category && submitted" class="form-text text-danger">
+          <small *ngIf="activity.controls.category.invalid && activity.controls.category.touched" class="form-text text-danger">
             {{ "This field is required." | localize}}
           </small>
         </div>
@@ -51,10 +51,10 @@
                 {{ "Amount" | localize}}
               </label>
               <div class="input-group">
-                <input [(ngModel)]="activity.amount" type="number" step="0.01" class="form-control form-input" [ngClass]="{ 'is-invalid': !activity.amount && submitted }" id="amount" name="amount" />
+                <input type="number" step="0.01" class="form-control form-input" [ngClass]="{ 'is-invalid': activity.controls.amount.invalid && activity.controls.amount.touched }" id="amount" name="amount" formControlName="amount" (input)="formatAmount()" />
                 <div class="input-group-text">{{ currency.symbol }}</div>
               </div>
-              <small *ngIf="!activity.amount && submitted" class="form-text text-danger">
+              <small *ngIf="activity.controls.amount.invalid && activity.controls.amount.touched" class="form-text text-danger">
                 {{ "This field is required." | localize}}
               </small>
             </div>
@@ -64,7 +64,7 @@
               <label class="small text-secondary">{{ "Date" | localize}}</label>
               <div class="row">
                 <div class="col">
-                  <select [(ngModel)]="activity.day" class="form-select form-input" [ngClass]="{ 'is-invalid': !activity.day && submitted }" id="day" name="day">
+                  <select class="form-select form-input" [ngClass]="{ 'is-invalid': activity.controls.day.invalid && activity.controls.day.touched }" id="day" name="day" formControlName="day">
                     <option value="01">1</option>
                     <option value="02">2</option>
                     <option value="03">3</option>
@@ -99,8 +99,7 @@
                   </select>
                 </div>
                 <div class="col">
-                  <select [(ngModel)]="activity.month" class="form-select form-input"
-                    [ngClass]="{ 'is-invalid': !activity.month && submitted }" id="month" name="month">
+                  <select class="form-select form-input" [ngClass]="{ 'is-invalid': activity.controls.month.invalid && activity.controls.month.touched }" id="month" name="month" formControlName="month">
                     <option value="01">{{ "January" | localize}}</option>
                     <option value="02">{{ "February" | localize}}</option>
                     <option value="03">{{ "March" | localize}}</option>
@@ -116,14 +115,14 @@
                   </select>
                 </div>
                 <div class="col">
-                  <select [(ngModel)]="activity.year" class="form-select form-input" [ngClass]="{ 'is-invalid': !activity.year && submitted }" id="year" name="year">
+                  <select class="form-select form-input" [ngClass]="{ 'is-invalid': activity.controls.year.invalid && activity.controls.year.touched }" id="year" name="year" formControlName="year">
                     <option *ngFor="let year of years" value="{{ year }}">
                       {{ year }}
                     </option>
                   </select>
                 </div>
               </div>
-              <small *ngIf="(!activity.day || !activity.month || !activity.year) && submitted" class="form-text text-danger">
+              <small *ngIf="(activity.controls.day.invalid && activity.controls.day.touched) || (activity.controls.month.invalid && activity.controls.month.touched) || (activity.controls.year.invalid && activity.controls.year.touched)" class="form-text text-danger">
                 {{ "This field is required." | localize}}
               </small>
             </div>
@@ -133,28 +132,22 @@
           <label class="small text-secondary" for="tags">
             {{ "Tags" | localize}}
           </label>
-          <input [(ngModel)]="activity.tags" type="text" class="form-control form-input" id="tags" name="tags" />
+          <input type="text" class="form-control form-input" id="tags" name="tags" formControlName="tags" (input)="formatTags()" />
         </div>
         <div class="mb-3">
           <label class="small text-secondary" for="description">
             {{ "Description" | localize}}
           </label>
-          <textarea [(ngModel)]="activity.description" class="form-control form-input" id="description" name="description"></textarea>
+          <textarea class="form-control form-input" id="description" name="description" formControlName="description"></textarea>
         </div>
         <div class="mb-3">
           <div class="form-check">
-            <input [(ngModel)]="activity.isExcluded" class="form-check-input" type="checkbox" value="" id="isExcluded" name="isExcluded">
+            <input class="form-check-input" type="checkbox" value="" id="isExcluded" name="isExcluded" formControlName="isExcluded">
             <label class="form-check-label" for="isExcluded">{{ "Exclude amount when calculating aggregates" | localize }}</label>
           </div>
         </div>
         <div class="text-end">
-          <button type="submit" class="btn btn-primary position-relative" [disabled]="saving">
-            <span [ngClass]="{ 'invisible': saving }">{{ "Save" | localize}}</span>
-            <ng-container *ngIf="saving">
-              <span class="spinner-border spinner-border-sm btn-spinner" role="status" aria-hidden="true"></span>
-              <span class="visually-hidden">{{ "Loading" | localize }} …</span>
-            </ng-container>
-          </button>
+          <button-spinner [type]="'submit'" [variant]="'primary'" [label]="'Save' | localize" [loading]="saving"></button-spinner>
         </div>
       </form>
     </div>
