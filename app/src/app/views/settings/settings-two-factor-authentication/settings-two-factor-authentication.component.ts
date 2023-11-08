@@ -79,6 +79,9 @@ export class SettingsTwoFactorAuthenticationComponent {
   }
 
   public finish2FA() {
+    this.setupStarted = false;
+    this.recoveryCodes = undefined;
+
     this.update.emit();
   }
 
