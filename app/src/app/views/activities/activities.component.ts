@@ -1,4 +1,4 @@
-import { Component, OnInit, LOCALE_ID } from "@angular/core";
+import { Component, OnInit, LOCALE_ID, HostListener } from "@angular/core";
 import { getCurrencySymbol } from "@angular/common";
 
 import { ActivitiesService } from "../../services/activities.service";
@@ -34,6 +34,9 @@ export class ActivitiesComponent implements OnInit {
   public currencyId: string;
 
   public years: any[];
+  public currentYear: number = 0;
+  public currentMonth: number = 2;
+  public shouldShowMoreActivities: boolean = true;
 
   private chart: echarts.ECharts;
 
@@ -221,7 +224,38 @@ export class ActivitiesComponent implements OnInit {
       error: ((error) => {
         this.retrievalError = this.appService.getErrorMessage(error);
       }),
+    }).add(() => {
+        this.showInitialActivities();
     });
+  }
+
+  public showInitialActivities(): void {
+    setTimeout(() => {
+      if (this.shouldShowMoreActivities && !(document.body.scrollHeight > document.body.clientHeight)) {
+        this.showMoreActivities();
+        this.showInitialActivities();
+      }
+    }, 5);
+  }
+
+  @HostListener("window:scroll", ['$event'])
+  onScroll(): void {
+    if (this.shouldShowMoreActivities && window.innerHeight + window.scrollY + 16 >= document.documentElement.scrollHeight) {
+      this.showMoreActivities();
+    }
+  }
+
+  public showMoreActivities(): void {
+    if (this.years[this.currentYear].months.length > this.currentMonth + 1) {
+      this.currentMonth += 1;
+      return;
+    } else if (this.years.length > this.currentYear + 1) {
+      this.currentYear += 1;
+      this.currentMonth = 2;
+      return;
+    } else {
+      this.shouldShowMoreActivities = false;
+    }
   }
 
   ngOnInit(): void {

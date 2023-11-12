@@ -24,52 +24,54 @@
 </div>
 <ng-container *ngIf="years">
   <ng-container *ngIf="years?.length > 0">
-    <ng-container *ngFor="let year of years">
-      <ng-container *ngFor="let month of year.months">
-        <div class="list-group-section mt-3">
-          <h5 class="mb-1">{{ month.month | month | localize }} {{ year.year }}</h5>
-          <ul class="list-group list-group-flush">
-            <ng-container *ngFor="let day of month.days">
-              <li class="list-group-item list-group-item-header">
-                <div class="row align-items-center justify-content-end">
-                  <div class="col text-start">
-                    <h6 class="mb-0">{{ day.date | date : "mediumDate" }}</h6>
-                  </div>
-                  <div class="col-auto text-end">
-                    <h6 class="mb-0" [ngClass]="{ 'text-success': day.total > 0, 'text-danger': day.total < 0 }">
-                      {{ day.total | currency : day.currency._id : "symbol-narrow" : "1.2-2" }}
-                    </h6>
-                  </div>
-                </div>
-              </li>
-              <li *ngFor="let activity of day.activities" class="list-group-item" routerLink="/activity/{{ activity._id }}">
-                <div class="row">
-                  <div class="col-auto">
-                    <div class="circle d-flex align-items-center justify-content-center bg-{{ activity.category.colorName }}">
-                      <i class="{{ activity.category.icon }} list-group-icon text-{{ activity.category.colorName }}"></i>
+    <ng-container *ngFor="let year of years; index as i">
+      <ng-container *ngIf="i <= currentYear">
+        <ng-container *ngFor="let month of year.months; index as j">
+          <div class="list-group-section mt-3" *ngIf="i < currentYear || (i == currentYear && j <= currentMonth)">
+            <h5 class="mb-1">{{ month.month | month | localize }} {{ year.year }}</h5>
+            <ul class="list-group list-group-flush">
+              <ng-container *ngFor="let day of month.days">
+                <li class="list-group-item list-group-item-header">
+                  <div class="row align-items-center justify-content-end">
+                    <div class="col text-start">
+                      <h6 class="mb-0">{{ day.date | date : "mediumDate" }}</h6>
+                    </div>
+                    <div class="col-auto text-end">
+                      <h6 class="mb-0" [ngClass]="{ 'text-success': day.total > 0, 'text-danger': day.total < 0 }">
+                        {{ day.total | currency : day.currency._id : "symbol-narrow" : "1.2-2" }}
+                      </h6>
                     </div>
                   </div>
-                  <div class="col text-start overflow-hidden">
-                    <h6 class="overflow-hidden text-nowrap text-truncate mb-0">{{ activity.title }}</h6>
-                    <div class="d-flex flex-wrap text-secondary small line-height-title mt-1">
-                      {{ activity.category.title | localize }}
-                    </div>
-                    <div *ngIf="activity.tags.length > 0" class="d-flex flex-wrap small line-height-title mt-1">
-                      <div *ngFor="let tag of activity.tags" class="badge bg-light text-dark fw-normal p-1 me-1">
-                        #{{ tag }}
+                </li>
+                <li *ngFor="let activity of day.activities" class="list-group-item" routerLink="/activity/{{ activity._id }}">
+                  <div class="row">
+                    <div class="col-auto">
+                      <div class="circle d-flex align-items-center justify-content-center bg-{{ activity.category.colorName }}">
+                        <i class="{{ activity.category.icon }} list-group-icon text-{{ activity.category.colorName }}"></i>
                       </div>
                     </div>
+                    <div class="col text-start overflow-hidden">
+                      <h6 class="overflow-hidden text-nowrap text-truncate mb-0">{{ activity.title }}</h6>
+                      <div class="d-flex flex-wrap text-secondary small line-height-title mt-1">
+                        {{ activity.category.title | localize }}
+                      </div>
+                      <div *ngIf="activity.tags.length > 0" class="d-flex flex-wrap small line-height-title mt-1">
+                        <div *ngFor="let tag of activity.tags" class="badge bg-light text-dark fw-normal p-1 me-1">
+                          #{{ tag }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto text-end">
+                      <h6 class="mb-0" [ngClass]="{ 'text-secondary': activity.isExcluded, 'text-success': !activity.isExcluded && activity.amount > 0, 'text-danger': !activity.isExcluded && activity.amount < 0 }">
+                        {{ activity.amount | currency : activity.currency._id : "symbol-narrow" : "1.2-2" }}
+                      </h6>
+                    </div>
                   </div>
-                  <div class="col-auto text-end">
-                    <h6 class="mb-0" [ngClass]="{ 'text-secondary': activity.isExcluded, 'text-success': !activity.isExcluded && activity.amount > 0, 'text-danger': !activity.isExcluded && activity.amount < 0 }">
-                      {{ activity.amount | currency : activity.currency._id : "symbol-narrow" : "1.2-2" }}
-                    </h6>
-                  </div>
-                </div>
-              </li>
-            </ng-container>
-          </ul>
-        </div>
+                </li>
+              </ng-container>
+            </ul>
+          </div>
+        </ng-container>
       </ng-container>
     </ng-container>
   </ng-container>
