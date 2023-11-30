@@ -59,7 +59,7 @@ export class ActivityFormComponent implements OnInit, OnChanges {
         this.categories = categories.sort((x, y) => {
           let titleX = this.localizePipe.transform(x.title);
           let titleY = this.localizePipe.transform(y.title);
-          
+
           if (titleX < titleY) {
             return -1;
           } else if (titleX > titleY) {

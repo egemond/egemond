@@ -3,14 +3,14 @@ import { Router } from "@angular/router";
 
 import { Collapse } from "bootstrap";
 
-import { AppService } from "../../services/app.service";
+import { AppService } from "./services/app.service";
 
 @Component({
-  selector: "app-layout",
-  templateUrl: "./layout.component.html",
-  styleUrls: ["./layout.component.css"],
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
-export class LayoutComponent implements OnInit {
+export class AppComponent implements OnInit {
   constructor(public router: Router, private appService: AppService) {}
 
   private navigation: any;
