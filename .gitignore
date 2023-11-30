@@ -68,3 +68,6 @@ app.yaml
 
 # Client app
 /public/
+
+# JetBrains
+.idea/

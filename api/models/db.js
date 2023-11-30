@@ -7,12 +7,7 @@ require("./user");
 
 db = process.env.DB_CONNECTION_STRING;
 
-mongoose.connect(db, {
-  useFindAndModify: false,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
+mongoose.connect(db);
 
 mongoose.connection.on("connected", () => {
   console.log("MongoDB connection successful.");
