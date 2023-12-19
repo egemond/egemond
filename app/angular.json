@@ -95,10 +95,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "egemond:build:production"
+              "buildTarget": "egemond:build:production"
             },
             "development": {
-              "browserTarget": "egemond:build:development"
+              "buildTarget": "egemond:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -106,7 +106,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "egemond:build"
+            "buildTarget": "egemond:build"
           }
         },
         "test": {
