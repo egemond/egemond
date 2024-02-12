@@ -25,7 +25,7 @@ export class ActivityAddComponent {
       year: today.getFullYear().toString(),
     });
   }
-  
+
   private formBuilder = new FormBuilder();
   public activity = this.formBuilder.group({
     title: ["", Validators.required],

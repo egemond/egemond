@@ -1,77 +1,87 @@
-<ng-container *ngIf="!retrievalError && !categories">
+@if (!retrievalError && !categories) {
   <app-spinner></app-spinner>
-</ng-container>
+}
 
-<div *ngIf="retrievalError" class="text-secondary text-center">
-  <p class="my-3">{{ retrievalError | localize}}</p>
-</div>
+@if (retrievalError) {
+  <div class="text-secondary text-center">
+    <p class="my-3">{{ retrievalError | localize }}</p>
+  </div>
+}
 
-<ng-container *ngIf="categories">
+@if (categories) {
   <div class="mb-3">
-    <h3>{{ "Statistics" | localize}}</h3>
+    <h3>{{ "Statistics" | localize }}</h3>
   </div>
   <ul class="nav nav-pills mb-3">
     <li class="nav-item me-1">
-      <button class="nav-link pointer" [ngClass]="{ 'active': type === 'expenses' }" (click)="switch('expenses')">{{ "Expenses" | localize}}</button>
+      <button class="nav-link pointer" [ngClass]="{ 'active': type === 'expenses' }"
+              (click)="switch('expenses')">{{ "Expenses" | localize }}
+      </button>
     </li>
     <li class="nav-item ms-1">
-      <button class="nav-link pointer" [ngClass]="{ 'active': type === 'incomes' }" (click)="switch('incomes')">{{ "Incomes" | localize}}</button>
+      <button class="nav-link pointer" [ngClass]="{ 'active': type === 'incomes' }"
+              (click)="switch('incomes')">{{ "Incomes" | localize }}
+      </button>
     </li>
   </ul>
-</ng-container>
+}
 <div class="row position-relative">
   <div class="col-md-6 donut-chart-container">
     <div class="donut-chart mb-3 mb-md-0" id="chart"></div>
   </div>
   <div class="col-md-6">
-    <ng-container *ngIf="categories">
-      <ng-container *ngIf="!selected">
-        <ng-container *ngIf="total[type] != 0">
+    @if (categories) {
+      @if (!selected) {
+        @if (total[type] != 0) {
           <ul class="list-group list-group-flush">
-            <ng-container *ngFor="let category of categories; index as i" >
-              <li class="list-group-item" *ngIf="category[type].total != 0" (click)="selectCategory(i)">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <div class="circle d-flex align-items-center justify-content-center bg-{{ category.colorName }}">
-                      <i class="{{ category.icon }} list-group-icon text-{{ category.colorName }}"></i>
+            @for (category of categories; track category; let i = $index) {
+              @if (category[type].total != 0) {
+                <li class="list-group-item" (click)="selectCategory(i)">
+                  <div class="row align-items-center">
+                    <div class="col-auto">
+                      <div class="circle d-flex align-items-center justify-content-center bg-{{ category.colorName }}">
+                        <i class="{{ category.icon }} list-group-icon text-{{ category.colorName }}"></i>
+                      </div>
+                    </div>
+                    <div class="col text-start overflow-hidden">
+                      <div class="d-flex align-items-center">
+                        <h6 class="overflow-hidden text-nowrap text-truncate mb-0">{{ category.title | localize }}</h6>
+                      </div>
+                    </div>
+                    <div class="col-auto text-end">
+                      <h6 class="mb-0"
+                          [ngClass]="{ 'text-success': category[type].total > 0, 'text-danger': category[type].total < 0 }">
+                        {{ category[type].total | currency : category[type].currency : "symbol-narrow" : "1.2-2" }}
+                      </h6>
                     </div>
                   </div>
-                  <div class="col text-start overflow-hidden">
-                    <div class="d-flex align-items-center">
-                        <h6 class="overflow-hidden text-nowrap text-truncate mb-0">{{ category.title | localize}}</h6>
-                    </div>
-                  </div>
-                  <div class="col-auto text-end">
-                    <h6 class="mb-0" [ngClass]="{ 'text-success': category[type].total > 0, 'text-danger': category[type].total < 0 }">
-                      {{ category[type].total | currency : category[type].currency : "symbol-narrow" : "1.2-2" }}
-                    </h6>
-                  </div>
-                </div>
-              </li>
-            </ng-container>
+                </li>
+              }
+            }
           </ul>
-        </ng-container>
-        <div *ngIf="total[type] == 0" class="text-secondary text-center">
-          <div class="mt-3">
-            <ng-container *ngIf="type == 'expenses'">
-              <p>{{ "You have not added any expenses yet." | localize}}</p>
-            </ng-container>
-            <ng-container *ngIf="type == 'incomes'">
-              <p>{{ "You have not added any incomes yet." | localize}}</p>
-            </ng-container>
+        } @else {
+          <div class="text-secondary text-center">
+            <div class="mt-3">
+              @if (type == 'expenses') {
+                <p>{{ "You have not added any expenses yet." | localize }}</p>
+              }
+              @if (type == 'incomes') {
+                <p>{{ "You have not added any incomes yet." | localize }}</p>
+              }
+            </div>
           </div>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="selected">
+        }
+      }
+      @if (selected) {
         <div class="mb-3">
-          <h5>{{ categories[selectedIndex].title | localize}}</h5>
+          <h5>{{ categories[selectedIndex].title | localize }}</h5>
           <a class="btn-link pointer" (click)="deselectCategory()">
             <i class="fas fa-arrow-left me-2"></i>
-            <span>{{ "Back to Categories" | localize}}</span>
+            <span>{{ "Back to Categories" | localize }}</span>
           </a>
         </div>
         <ul class="list-group list-group-flush">
-          <ng-container *ngFor="let date of categories[selectedIndex][type].dates">
+          @for (date of categories[selectedIndex][type].dates; track date) {
             <li class="list-group-item list-group-item-header">
               <div class="row align-items-center justify-content-end">
                 <div class="col text-start">
@@ -79,31 +89,40 @@
                 </div>
               </div>
             </li>
-            <li *ngFor="let activity of date.activities" class="list-group-item" routerLink="/activity/{{ activity._id }}">
-              <div class="row align-items-center">
-                <div class="col-auto">
-                  <div class="circle d-flex align-items-center justify-content-center bg-{{ activity.category.colorName }}">
-                    <i class="{{ activity.category.icon }} list-group-icon text-{{ activity.category.colorName }}"></i>
-                  </div>
-                </div>
-                <div class="col text-start overflow-hidden">
-                  <h6 class="overflow-hidden text-nowrap text-truncate mb-0">{{ activity.title }}</h6>
-                  <div *ngIf="activity.tags.length > 0" class="d-flex flex-wrap text-secondary small line-height-title mt-1">
-                    <div *ngFor="let tag of activity.tags" class="me-1">
-                      #{{ tag }}
+            @for (activity of date.activities; track activity) {
+              <li class="list-group-item" routerLink="/activity/{{ activity._id }}">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <div
+                      class="circle d-flex align-items-center justify-content-center bg-{{ activity.category.colorName }}">
+                      <i
+                        class="{{ activity.category.icon }} list-group-icon text-{{ activity.category.colorName }}"></i>
                     </div>
                   </div>
+                  <div class="col text-start overflow-hidden">
+                    <h6 class="overflow-hidden text-nowrap text-truncate mb-0">{{ activity.title }}</h6>
+                    @if (activity.tags.length > 0) {
+                      <div class="d-flex flex-wrap text-secondary small line-height-title mt-1">
+                        @for (tag of activity.tags; track tag) {
+                          <div class="me-1">
+                            #{{ tag }}
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                  <div class="col-auto text-end">
+                    <h6 class="mb-0"
+                        [ngClass]="{ 'text-secondary': activity.isExcluded, 'text-success': !activity.isExcluded && activity.amount > 0, 'text-danger': !activity.isExcluded && activity.amount < 0 }">
+                      {{ activity.amount | currency : activity.currency._id : "symbol-narrow" : "1.2-2" }}
+                    </h6>
+                  </div>
                 </div>
-                <div class="col-auto text-end">
-                  <h6 class="mb-0" [ngClass]="{ 'text-secondary': activity.isExcluded, 'text-success': !activity.isExcluded && activity.amount > 0, 'text-danger': !activity.isExcluded && activity.amount < 0 }">
-                    {{ activity.amount | currency : activity.currency._id : "symbol-narrow" : "1.2-2" }}
-                  </h6>
-                </div>
-              </div>
-            </li>
-          </ng-container>
+              </li>
+            }
+          }
         </ul>
-      </ng-container>
-    </ng-container>
+      }
+    }
   </div>
 </div>

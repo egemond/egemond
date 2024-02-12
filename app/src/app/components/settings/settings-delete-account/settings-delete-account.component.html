@@ -1,7 +1,9 @@
 <h4>{{ "Delete account" | localize }}</h4>
-<div class="alert alert-{{ alert.variant }}" *ngIf="alert">
-  {{ alert.message | localize }}
-</div>
+@if (alert) {
+  <div class="alert alert-{{ alert.variant }}">
+    {{ alert.message | localize }}
+  </div>
+}
 <div class="card">
   <div class="card-body">
     <p>{{ "Deleting your account permanently removes all your account information and associated data. You will not be able to recover any data you have added." | localize }}</p>
@@ -12,12 +14,13 @@
       </div>
     </div>
     <div class="text-end">
-      <button type="button" class="btn btn-danger position-relative" [disabled]="!deleteAccountConfirmed || saving" (click)="deleteUser()">
-        <span [ngClass]="{ 'invisible': saving }">{{ "Delete account" | localize}}</span>
-        <ng-container *ngIf="saving">
+      <button type="button" class="btn btn-danger position-relative" [disabled]="!deleteAccountConfirmed || saving"
+              (click)="deleteUser()">
+        <span [ngClass]="{ 'invisible': saving }">{{ "Delete account" | localize }}</span>
+        @if (saving) {
           <span class="spinner-border spinner-border-sm btn-spinner" role="status" aria-hidden="true"></span>
           <span class="visually-hidden">{{ "Loading" | localize }} …</span>
-        </ng-container>
+        }
       </button>
     </div>
   </div>

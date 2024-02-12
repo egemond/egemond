@@ -1,84 +1,102 @@
-<ng-container *ngIf="!retrievalError && !years">
+@if (!retrievalError && !years) {
   <app-spinner></app-spinner>
-</ng-container>
+}
 
-<div *ngIf="retrievalError" class="text-secondary text-center">
-  <p class="my-3">{{ retrievalError | localize}}</p>
-</div>
+@if (retrievalError) {
+  <div class="text-secondary text-center">
+    <p class="my-3">{{ retrievalError | localize }}</p>
+  </div>
+}
 
 <div class="subheader" [ngClass]="{ 'subheader-empty': !years }">
   <div class="subheader-container pt-3">
-    <div *ngIf="total != null" class="row justify-content-end pb-3">
-      <div class="col text-start">
-        <h4>{{ "Balance" | localize}}</h4>
-        <h1 class="fw-medium mb-0" [ngClass]="{ 'text-success': total > 0, 'text-danger': total < 0 }">{{ total | currency : currencyId : "symbol-narrow" : "1.2-2" }}</h1>
+    @if (total != null) {
+      <div class="row justify-content-end pb-3">
+        <div class="col text-start">
+          <h4>{{ "Balance" | localize }}</h4>
+          <h1 class="fw-medium mb-0"
+              [ngClass]="{ 'text-success': total > 0, 'text-danger': total < 0 }">{{ total | currency : currencyId : "symbol-narrow" : "1.2-2" }}</h1>
+        </div>
+        <div class="col-auto text-end">
+          <button class="btn btn-primary btn-square" routerLink="/activity/add">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
       </div>
-      <div class="col-auto text-end">
-        <button class="btn btn-primary btn-square" routerLink="/activity/add">
-          <i class="fas fa-plus"></i>
-        </button>
-      </div>
-    </div>
+    }
     <div class="bar-chart mb-3 mb-md-0" id="chart" [ngClass]="{ 'collapse': years?.length == 0 }"></div>
   </div>
 </div>
-<ng-container *ngIf="years">
-  <ng-container *ngIf="years?.length > 0">
-    <ng-container *ngFor="let year of years; index as i">
-      <ng-container *ngIf="i <= currentYear">
-        <ng-container *ngFor="let month of year.months; index as j">
-          <div class="list-group-section mt-3" *ngIf="i < currentYear || (i == currentYear && j <= currentMonth)">
-            <h5 class="mb-1">{{ month.month | month | localize }} {{ year.year }}</h5>
-            <ul class="list-group list-group-flush">
-              <ng-container *ngFor="let day of month.days">
-                <li class="list-group-item list-group-item-header">
-                  <div class="row align-items-center justify-content-end">
-                    <div class="col text-start">
-                      <h6 class="mb-0">{{ day.date | date : "mediumDate" }}</h6>
-                    </div>
-                    <div class="col-auto text-end">
-                      <h6 class="mb-0" [ngClass]="{ 'text-success': day.total > 0, 'text-danger': day.total < 0 }">
-                        {{ day.total | currency : day.currency._id : "symbol-narrow" : "1.2-2" }}
-                      </h6>
-                    </div>
-                  </div>
-                </li>
-                <li *ngFor="let activity of day.activities" class="list-group-item" routerLink="/activity/{{ activity._id }}">
-                  <div class="row">
-                    <div class="col-auto">
-                      <div class="circle d-flex align-items-center justify-content-center bg-{{ activity.category.colorName }}">
-                        <i class="{{ activity.category.icon }} list-group-icon text-{{ activity.category.colorName }}"></i>
+@if (years) {
+  @if (years?.length > 0) {
+    @for (year of years; track year; let i = $index) {
+      @if (i <= currentYearIndex) {
+        @for (month of year.months; track month; let j = $index) {
+          @if (i < currentYearIndex || (i == currentYearIndex && j <= currentMonthIndex)) {
+            <div class="list-group-section mt-3">
+              <h5 class="mb-1">{{ month.month | month | localize }} {{ year.year }}</h5>
+              <ul class="list-group list-group-flush">
+                @for (day of month.days; track day) {
+                  <li class="list-group-item list-group-item-header">
+                    <div class="row align-items-center justify-content-end">
+                      <div class="col text-start">
+                        <h6 class="mb-0">{{ day.date | date : "mediumDate" }}</h6>
+                      </div>
+                      <div class="col-auto text-end">
+                        <h6 class="mb-0" [ngClass]="{ 'text-success': day.total > 0, 'text-danger': day.total < 0 }">
+                          {{ day.total | currency : day.currency._id : "symbol-narrow" : "1.2-2" }}
+                        </h6>
                       </div>
                     </div>
-                    <div class="col text-start overflow-hidden">
-                      <h6 class="overflow-hidden text-nowrap text-truncate mb-0">{{ activity.title }}</h6>
-                      <div class="d-flex flex-wrap text-secondary small line-height-title mt-1">
-                        {{ activity.category.title | localize }}
-                      </div>
-                      <div *ngIf="activity.tags.length > 0" class="d-flex flex-wrap small line-height-title mt-1">
-                        <div *ngFor="let tag of activity.tags" class="badge bg-light text-dark fw-normal p-1 me-1">
-                          #{{ tag }}
+                  </li>
+                  @for (activity of day.activities; track activity) {
+                    <li class="list-group-item" routerLink="/activity/{{ activity._id }}">
+                      <div class="row">
+                        <div class="col-auto">
+                          <div
+                            class="circle d-flex align-items-center justify-content-center bg-{{ activity.category.colorName }}">
+                            <i
+                              class="{{ activity.category.icon }} list-group-icon text-{{ activity.category.colorName }}"></i>
+                          </div>
+                        </div>
+                        <div class="col text-start overflow-hidden">
+                          <h6 class="overflow-hidden text-nowrap text-truncate mb-0">{{ activity.title }}</h6>
+                          <div class="d-flex flex-wrap text-secondary small line-height-title mt-1">
+                            {{ activity.category.title | localize }}
+                          </div>
+                          @if (activity.tags.length > 0) {
+                            <div class="d-flex flex-wrap small line-height-title mt-1">
+                              @for (tag of activity.tags; track tag) {
+                                <div class="badge bg-light text-dark fw-normal p-1 me-1">
+                                  #{{ tag }}
+                                </div>
+                              }
+                            </div>
+                          }
+                        </div>
+                        <div class="col-auto text-end">
+                          <h6 class="mb-0"
+                              [ngClass]="{ 'text-secondary': activity.isExcluded, 'text-success': !activity.isExcluded && activity.amount > 0, 'text-danger': !activity.isExcluded && activity.amount < 0 }">
+                            {{ activity.amount | currency : activity.currency._id : "symbol-narrow" : "1.2-2" }}
+                          </h6>
                         </div>
                       </div>
-                    </div>
-                    <div class="col-auto text-end">
-                      <h6 class="mb-0" [ngClass]="{ 'text-secondary': activity.isExcluded, 'text-success': !activity.isExcluded && activity.amount > 0, 'text-danger': !activity.isExcluded && activity.amount < 0 }">
-                        {{ activity.amount | currency : activity.currency._id : "symbol-narrow" : "1.2-2" }}
-                      </h6>
-                    </div>
-                  </div>
-                </li>
-              </ng-container>
-            </ul>
-          </div>
-        </ng-container>
-      </ng-container>
-    </ng-container>
-  </ng-container>
-  <div *ngIf="years?.length == 0" class="text-secondary text-center">
-    <div class="my-3">
-      <i class="fas fa-receipt fa-5x"></i>
+                    </li>
+                  }
+                }
+              </ul>
+            </div>
+          }
+        }
+      }
+    }
+  }
+  @else {
+    <div class="text-secondary text-center">
+      <div class="my-3">
+        <i class="fas fa-receipt fa-5x"></i>
+      </div>
+      <p>{{ "Your activity list is empty." | localize }}</p>
     </div>
-    <p>{{ "Your activity list is empty." | localize}}</p>
-  </div>
-</ng-container>
+  }
+}

@@ -9,6 +9,8 @@ import { LocalizePipe } from "../../pipes/localize.pipe";
 
 import * as echarts from "echarts";
 import { DateTime } from "luxon";
+import {Currency} from "../../models/currency";
+import {Activity} from "../../models/activity";
 
 @Component({
   selector: "app-activities",
@@ -33,9 +35,24 @@ export class ActivitiesComponent implements OnInit {
 
   public currencyId: string;
 
-  public years: any[];
-  public currentYear: number = 0;
-  public currentMonth: number = 2;
+  public years: {
+    months: {
+      days: {
+        activities: Activity[],
+        date: string,
+        total: number,
+        currency: Currency,
+      }[],
+      month: number,
+      total: number,
+      currency: Currency,
+    }[],
+    year: string,
+    total: number,
+    currency: Currency,
+  }[];
+  public currentYearIndex: number = 0;
+  public currentMonthIndex: number = 2;
   public shouldShowMoreActivities: boolean = true;
 
   private chart: echarts.ECharts;
@@ -53,7 +70,7 @@ export class ActivitiesComponent implements OnInit {
           let year = activity.date.getFullYear();
           let month = activity.date.getMonth();
           let day = activity.date.getDate();
-  
+
           if (!(year in years)) {
             years[year] = {
               total: 0,
@@ -135,7 +152,7 @@ export class ActivitiesComponent implements OnInit {
                       };
                     })
                     .reverse(),
-                  month: month,
+                  month: parseInt(month),
                   total: years[year]["months"][month]["total"],
                   currency: years[year]["months"][month]["currency"],
                 };
@@ -246,12 +263,12 @@ export class ActivitiesComponent implements OnInit {
   }
 
   public showMoreActivities(): void {
-    if (this.years[this.currentYear].months.length > this.currentMonth + 1) {
-      this.currentMonth += 1;
+    if (this.years[this.currentYearIndex].months.length > this.currentMonthIndex + 1) {
+      this.currentMonthIndex += 1;
       return;
-    } else if (this.years.length > this.currentYear + 1) {
-      this.currentYear += 1;
-      this.currentMonth = 2;
+    } else if (this.years.length > this.currentYearIndex + 1) {
+      this.currentYearIndex += 1;
+      this.currentMonthIndex = 2;
       return;
     } else {
       this.shouldShowMoreActivities = false;

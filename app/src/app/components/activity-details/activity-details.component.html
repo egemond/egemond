@@ -1,34 +1,39 @@
-<ng-container *ngIf="!retrievalError && !activity">
+@if (!retrievalError && !activity) {
   <app-spinner></app-spinner>
-</ng-container>
+}
 
-<div *ngIf="retrievalError" class="text-secondary text-center">
-  <p class="my-3">{{ retrievalError | localize}}</p>
-</div>
+@if (retrievalError) {
+  <div class="text-secondary text-center">
+    <p class="my-3">{{ retrievalError | localize }}</p>
+  </div>
+}
 
-<ng-container *ngIf="activity">
+@if (activity) {
   <div class="mb-3">
     <div class="row align-items-start justify-content-end">
       <div class="col text-start">
-        <h3>{{ "Activity details" | localize}}</h3>
+        <h3>{{ "Activity details" | localize }}</h3>
         <a routerLink="/activities">
           <i class="fas fa-arrow-left me-2"></i>
-          <span>{{ "Back to Overview" | localize}}</span>
+          <span>{{ "Back to Overview" | localize }}</span>
         </a>
       </div>
       <div class="col-auto d-flex flex-nowrap">
         <button class="btn btn-primary btn-square" routerLink="/activity/edit/{{ activity._id }}">
           <i class="fas fa-pencil-alt"></i>
         </button>
-        <button class="btn btn-danger btn-square ms-3" id="deleteModalButton" data-bs-toggle="modal" data-bs-target="#deleteModal">
+        <button class="btn btn-danger btn-square ms-3" id="deleteModalButton" data-bs-toggle="modal"
+                data-bs-target="#deleteModal">
           <i class="fas fa-trash-alt"></i>
         </button>
       </div>
     </div>
   </div>
-  <div *ngIf="error.message" class="alert alert-{{ error.type }}" role="alert">
-    {{ error.message | localize}}
-  </div>
+  @if (error.message) {
+    <div class="alert alert-{{ error.type }}" role="alert">
+      {{ error.message | localize }}
+    </div>
+  }
   <div class="card rounded">
     <div class="card-image d-flex align-items-end" [style.background-image]="image">
       <div class="card-image-overlay p-3">
@@ -38,7 +43,8 @@
             <p class="mb-0">{{ activity.date | date : "longDate" }}</p>
           </div>
           <div class="col-auto">
-            <h6 class="mb-0 text-danger" [ngClass]="{ 'text-success': activity.amount > 0, 'text-danger': activity.amount < 0 }">
+            <h6 class="mb-0 text-danger"
+                [ngClass]="{ 'text-success': activity.amount > 0, 'text-danger': activity.amount < 0 }">
               {{ activity.amount | currency : activity.currency._id : "symbol-narrow" : "1.2-2" }}
             </h6>
           </div>
@@ -46,23 +52,31 @@
       </div>
     </div>
     <div class="card-body pb-0">
-      <div class="alert alert-primary" *ngIf="activity.isExcluded">
-        {{ "The amount of this activity is not taken into account when calculating aggregates." | localize }}
-      </div>
+      @if (activity.isExcluded) {
+        <div class="alert alert-primary">
+          {{ "The amount of this activity is not taken into account when calculating aggregates." | localize }}
+        </div>
+      }
       <div class="mb-3">
         <p class="form-label">{{ "Category" | localize }}</p>
         <p class="mb-0">{{ activity.category.title | localize }}</p>
       </div>
-      <div *ngIf="activity.tags.length > 0" class="mb-3">
-        <p class="form-label">{{ "Tags" | localize }}</p>
-        <p class="mb-0">
-          <span *ngFor="let tag of activity.tags" class="badge bg-light text-dark fw-normal p-2 me-1">#{{ tag }}</span>
-        </p>
-      </div>
-      <div *ngIf="activity.description" class="mb-3">
-        <p class="form-label">{{ "Description" | localize }}</p>
-        <p class="mb-0">{{ activity.description }}</p>
-      </div>
+      @if (activity.tags.length > 0) {
+        <div class="mb-3">
+          <p class="form-label">{{ "Tags" | localize }}</p>
+          <p class="mb-0">
+            @for (tag of activity.tags; track tag) {
+              <span class="badge bg-light text-dark fw-normal p-2 me-1">#{{ tag }}</span>
+            }
+          </p>
+        </div>
+      }
+      @if (activity.description) {
+        <div class="mb-3">
+          <p class="form-label">{{ "Description" | localize }}</p>
+          <p class="mb-0">{{ activity.description }}</p>
+        </div>
+      }
     </div>
   </div>
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
@@ -79,13 +93,13 @@
           <button type="button" class="btn btn-neutral" data-bs-dismiss="modal">{{ "Cancel" | localize }}</button>
           <button type="button" class="btn btn-danger position-relative" [disabled]="saving" (click)="deleteActivity()">
             <span [ngClass]="{ 'invisible': saving }">{{ "Delete" | localize }}</span>
-            <ng-container *ngIf="saving">
+            @if (saving) {
               <span class="spinner-border spinner-border-sm btn-spinner" role="status" aria-hidden="true"></span>
               <span class="visually-hidden">{{ "Loading" | localize }} …</span>
-            </ng-container>
+            }
           </button>
         </div>
       </div>
     </div>
   </div>
-</ng-container>
+}

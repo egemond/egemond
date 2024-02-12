@@ -25,7 +25,7 @@ import * as echarts from "echarts";
 export class StatisticsComponent implements OnInit {
   constructor(private activitiesService: ActivitiesService, private appService: AppService, private categoriesService: CategoriesService, private currencyPipe: CurrencyPipe) {}
 
-  public categories: any;
+  public categories: any[];
 
   public selected: boolean = false;
 
@@ -33,9 +33,10 @@ export class StatisticsComponent implements OnInit {
 
   public type: string = "expenses";
 
-  public total: any = {
+  public total = {
     expenses: 0.0,
     incomes: 0.0,
+    currency: undefined,
   };
 
   public currencyId: string;
@@ -176,7 +177,7 @@ export class StatisticsComponent implements OnInit {
                 if (!activity.isExcluded) {
                   categories[category].incomes.total += activity.amount;
                 }
-                
+
                 this.total.currency = activity.currency;
                 if (!activity.isExcluded) {
                   this.total.incomes += activity.amount;

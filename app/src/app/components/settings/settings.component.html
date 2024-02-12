@@ -1,36 +1,43 @@
-<ng-container *ngIf="!retrievalError && (!user || !languages)">
+@if (!retrievalError && (!user || !languages)) {
   <app-spinner></app-spinner>
-</ng-container>
+}
 
-<div *ngIf="retrievalError" class="text-secondary text-center">
-  <p class="my-3">{{ retrievalError | localize}}</p>
-</div>
+@if (retrievalError) {
+  <div class="text-secondary text-center">
+    <p class="my-3">{{ retrievalError | localize }}</p>
+  </div>
+}
 
-<ng-container *ngIf="user && languages">
+@if (user && languages) {
   <div class="mb-3">
-    <h3>{{ "Settings" | localize}}</h3>
+    <h3>{{ "Settings" | localize }}</h3>
   </div>
   <div class="row justify-content-between">
     <div class="col-md-4 col-xl-3 overflow-auto mb-3">
       <ul class="nav flex-md-column flex-nowrap nav-pills" id="pills-tab" role="tablist">
         <li class="nav-item me-1 me-md-0 mb-md-1" role="presentation">
-          <button class="nav-link text-nowrap text-start w-100 active" id="themeTab" data-bs-toggle="pill" data-bs-target="#theme" type="button" role="tab" aria-controls="theme" aria-selected="true">
-            <span>{{ "Theme" | localize}}</span>
+          <button class="nav-link text-nowrap text-start w-100 active" id="themeTab" data-bs-toggle="pill"
+                  data-bs-target="#theme" type="button" role="tab" aria-controls="theme" aria-selected="true">
+            <span>{{ "Theme" | localize }}</span>
           </button>
         </li>
         <li class="nav-item mx-1 mx-md-0 my-md-1" role="presentation">
-          <button class="nav-link text-nowrap text-start w-100" id="userAccountTab" data-bs-toggle="pill" data-bs-target="#userAccount" type="button" role="tab" aria-controls="userAccount" aria-selected="false">
-            <span>{{ "Account" | localize}}</span>
+          <button class="nav-link text-nowrap text-start w-100" id="userAccountTab" data-bs-toggle="pill"
+                  data-bs-target="#userAccount" type="button" role="tab" aria-controls="userAccount"
+                  aria-selected="false">
+            <span>{{ "Account" | localize }}</span>
           </button>
         </li>
         <li class="nav-item mx-1 mx-md-0 my-md-1" role="presentation">
-          <button class="nav-link text-nowrap text-start w-100" id="securityTab" data-bs-toggle="pill" data-bs-target="#security" type="button" role="tab" aria-controls="security" aria-selected="false">
-            <span>{{ "Security" | localize}}</span>
+          <button class="nav-link text-nowrap text-start w-100" id="securityTab" data-bs-toggle="pill"
+                  data-bs-target="#security" type="button" role="tab" aria-controls="security" aria-selected="false">
+            <span>{{ "Security" | localize }}</span>
           </button>
         </li>
         <li class="nav-item ms-1 ms-md-0 mt-md-1" role="presentation">
-          <button class="nav-link text-nowrap text-start w-100" id="languageTab" data-bs-toggle="pill" data-bs-target="#language" type="button" role="tab" aria-controls="language" aria-selected="false">
-            <span>{{ "Language" | localize}}</span>
+          <button class="nav-link text-nowrap text-start w-100" id="languageTab" data-bs-toggle="pill"
+                  data-bs-target="#language" type="button" role="tab" aria-controls="language" aria-selected="false">
+            <span>{{ "Language" | localize }}</span>
           </button>
         </li>
       </ul>
@@ -56,15 +63,16 @@
             <app-settings-change-password [(user)]="user"></app-settings-change-password>
           </div>
           <div class="mb-0">
-            <app-settings-two-factor-authentication [user]="user" [loading]="loading" (update)="getUser()"></app-settings-two-factor-authentication>
+            <app-settings-two-factor-authentication [user]="user" [loading]="loading"
+                                                    (update)="getUser()"></app-settings-two-factor-authentication>
           </div>
         </div>
 
         <div class="tab-pane fade" id="language" role="tabpanel" aria-labelledby="languageTab" tabindex="3">
           <app-settings-language [(user)]="user" [languages]="languages"></app-settings-language>
         </div>
-        
+
       </div>
     </div>
   </div>
-</ng-container>
+}

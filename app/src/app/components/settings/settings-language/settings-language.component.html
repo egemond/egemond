@@ -1,9 +1,14 @@
 <h4>{{ "Language" | localize }}</h4>
-<div class="alert alert-{{ alert.variant }}" *ngIf="alert">
-  {{ alert.message | localize }}
-</div>
+@if (alert) {
+  <div class="alert alert-{{ alert.variant }}">
+    {{ alert.message | localize }}
+  </div>
+}
 <ul class="list-group list-group-flush rounded list-group-shadow mt-0">
-  <li *ngFor="let language of languages" class="list-group-item" [ngClass]="{ 'active': this.user.language == language._id, 'disabled': saving }" (click)="changeLanguage(language._id)">
-    {{ language.language }}
-  </li>
+  @for (language of languages; track language) {
+    <li class="list-group-item" [ngClass]="{ 'active': this.user.language == language._id, 'disabled': saving }"
+        (click)="changeLanguage(language._id)">
+      {{ language.language }}
+    </li>
+  }
 </ul>
