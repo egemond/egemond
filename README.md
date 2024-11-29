@@ -50,3 +50,18 @@ npm start
 ```
 
 Egemond should be accessible on [http://localhost:3000](http://localhost:3000). To create your user account, go to [http://localhost:3000/signup](http://localhost:3000/signup). Enter your email, desired password and master password that you have set in the configuration. Then, select the currency you would like to use. After that you are all set to start using Egemond.
+
+### Docker
+You can also run Egemond using Docker.
+
+To create a Docker image, run
+```
+docker build -t egemond .
+```
+
+When the Docker image is created, run
+```
+docker run --name egemond -p 3000:3000 -e "DB_CONNECTION_STRING={MongoDB connection string}" -e "JWT_SECRET={JWT secret}" -e "ENABLE_SIGNUP=true" -e "MASTER_PASSWORD={Master password}" egemond
+```
+
+Same as before, Egemond should be accessible on [http://localhost:3000](http://localhost:3000).
